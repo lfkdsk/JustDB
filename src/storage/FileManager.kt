@@ -39,13 +39,13 @@ class FileManager {
 		var fileChannel: FileChannel = getFile(block.fileName)
 	}
 
+	private fun createNewTableChannel(fileName: String): FileChannel {
+		val newTable = File(dataBaseDir, fileName)
+		val randomAccess: RandomAccessFile = RandomAccessFile(newTable, "rws")
+		return randomAccess.channel
+	}
+
 	private fun getFile(fileName: String): FileChannel {
-		var fileChannel: FileChannel? = openFiles[fileName]
-		return fileChannel ?: fileChannel.apply {
-			val newTable = File(dataBaseDir, fileName)
-			val randomAccess: RandomAccessFile = RandomAccessFile(newTable, "rws")
-			fileChannel = randomAccess.channel
-			openFiles.put(fileName, fileChannel as FileChannel)
-		} as FileChannel
+		return openFiles[fileName] ?: createNewTableChannel(fileName)
 	}
 }
