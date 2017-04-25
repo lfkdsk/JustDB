@@ -8,17 +8,16 @@ import java.nio.channels.FileChannel
 /**
  * Created by liufengkai on 2017/4/24.
  */
-class FileManager {
-	private val dataBaseDir: File
+class FileManager(databaseName: String, homeDir: String) {
+
+	private val dataBaseDir: File = File(homeDir, databaseName)
 
 	private var isNewDataBase: Boolean
 
 	private var openFiles: MutableMap<String, FileChannel> = HashMap()
 
-	constructor(databaseName: String) {
-		val homeDir = System.getProperty("user.home")
+	init {
 		// create database file
-		this.dataBaseDir = File(homeDir, databaseName)
 		this.isNewDataBase = !dataBaseDir.exists()
 
 		// test isCan create dir
@@ -34,11 +33,17 @@ class FileManager {
 		}
 	}
 
+	constructor(databaseName: String) : this(databaseName, System.getProperty("user.home"))
+
 	fun read(block: Block, byteBuffer: ByteBuffer) {
 		byteBuffer.clear()
 		var fileChannel: FileChannel = getFile(block.fileName)
 	}
 
+	/**
+	 * create new table
+	 * @param fileName tableName
+	 */
 	private fun createNewTableChannel(fileName: String): FileChannel {
 		val newTable = File(dataBaseDir, fileName)
 		val randomAccess: RandomAccessFile = RandomAccessFile(newTable, "rws")
