@@ -26,11 +26,9 @@ class FileManager(databaseName: String, homeDir: String) {
 		}
 
 		// delete temp files
-		dataBaseDir.list().forEach {
-			if (it.startsWith("just-temp")) {
-				File(dataBaseDir, it).delete()
-			}
-		}
+		dataBaseDir.list()
+				.filter { it.startsWith("just-temp") }
+				.forEach { File(dataBaseDir, it).delete() }
 	}
 
 	constructor(databaseName: String) : this(databaseName, System.getProperty("user.home"))
