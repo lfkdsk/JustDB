@@ -10,6 +10,8 @@ interface Token {
 
 	var tag: Int
 
+	var text: String
+
 	fun isIdentifier(): Boolean
 
 	fun isNumber(): Boolean
@@ -17,8 +19,6 @@ interface Token {
 	fun isString(): Boolean
 
 	fun isNull(): Boolean
-
-	fun getText(): String
 
 	fun isType(): Boolean
 

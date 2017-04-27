@@ -1,1 +1,2 @@
-select lfkdsk from lf,lll where lf.xxx = lll.xxx
+select lfkdsk from lf,lll where lf = lll;
+// create table lfkdsk ( dddd INT, abcdefg VARCHAR );

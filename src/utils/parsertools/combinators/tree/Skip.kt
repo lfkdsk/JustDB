@@ -2,13 +2,14 @@ package utils.parsertools.combinators.tree
 
 import utils.parsertools.ast.AstNode
 import utils.parsertools.ast.Token
+import utils.parsertools.lex.Lexer
 
 
 /**
  * Created by liufengkai on 2017/4/24.
  */
 
-class Skip constructor(val pat: Array<String>) : Leaf(pat) {
+class Skip constructor(pat: List<String>) : Leaf(pat) {
 
 	/**
 	 * 所谓Skip 不添加节点
@@ -19,5 +20,10 @@ class Skip constructor(val pat: Array<String>) : Leaf(pat) {
 	 * @param token token
 	 */
 	override fun find(list: MutableList<AstNode>, token: Token) {
+
+	}
+
+	override fun parse(lexer: Lexer, nodes: MutableList<AstNode>) {
+
 	}
 }

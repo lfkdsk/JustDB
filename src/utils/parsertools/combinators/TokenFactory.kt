@@ -17,6 +17,7 @@ abstract class TokenFactory {
 
 	companion object FunctionCreator {
 		val CREATE = "create"
+		val LIST = -20
 
 		/**
 		 * 直接创建一个AstList
@@ -33,7 +34,7 @@ abstract class TokenFactory {
 					val results: List<AstNode> = arg as? List<AstNode> ?: emptyList<AstNode>()
 					// 节点折叠
 					if (results.size == 1) return results.first()
-					else return AstList()
+					else return AstList(results, LIST)
 				}
 			}.apply { if (null == f) f = this }
 		}

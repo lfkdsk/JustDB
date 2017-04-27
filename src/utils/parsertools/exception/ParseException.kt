@@ -12,6 +12,6 @@ import utils.parsertools.ast.Token
 class ParseException(message: String) : Exception(message) {
 
 	constructor(message: String, token: Token)
-			: this("syntax error around \"${token.getText()}\"" +
+			: this("syntax error around \"${token.text}\"" +
 			" at line ${token.lineNumber} message : $message")
 }

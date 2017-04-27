@@ -15,13 +15,13 @@ import utils.parsertools.lex.Lexer
  * @author lfkdsk
  */
 
-open class Leaf(val tokens: Array<String>) : Element {
+open class Leaf(val tokens: List<String>) : Element {
 
 	override fun parse(lexer: Lexer, nodes: MutableList<AstNode>) {
 		val token = lexer.nextToken()
 
 		if (token.isIdentifier()) {
-			tokens.filter { it == token.getText() }
+			tokens.filter { it == token.text }
 					.forEach {
 						find(nodes, token)
 						return
@@ -48,6 +48,6 @@ open class Leaf(val tokens: Array<String>) : Element {
 
 	override fun match(lexer: Lexer): Boolean {
 		val token = lexer[0]
-		return token.isIdentifier() && tokens.any { it == token.getText() }
+		return token.isIdentifier() && tokens.any { it == token.text }
 	}
 }

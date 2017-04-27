@@ -1,12 +1,13 @@
 package utils.parsertools.combinators
 
 import combinators.word.Operators
-import utils.parsertools.exception.ParseException
-import utils.parsertools.lex.Lexer
 import utils.parsertools.ast.AstLeaf
 import utils.parsertools.ast.AstNode
 import utils.parsertools.combinators.token.*
 import utils.parsertools.combinators.tree.*
+import utils.parsertools.exception.ParseException
+import utils.parsertools.lex.Lexer
+import java.util.*
 
 /**
  * Created by liufengkai on 2017/4/24.
@@ -44,7 +45,7 @@ open class Bnf {
 	 */
 	fun parse(lexer: Lexer): AstNode {
 		val results = ArrayList<AstNode>()
-		elements.forEach { parse(lexer) }
+		elements.forEach { it.parse(lexer, results) }
 		return factory!!.make(results)
 	}
 
@@ -95,6 +96,11 @@ open class Bnf {
 		return this
 	}
 
+	fun enum(enumSet: Set<String>, clazz: Class<out AstLeaf> = defaultLeaf): Bnf {
+		elements.add(EnumToken(clazz, enumSet))
+		return this
+	}
+
 	fun string(clazz: Class<out AstLeaf> = defaultLeaf): Bnf {
 		elements.add(StrToken(clazz))
 		return this
@@ -121,8 +127,8 @@ open class Bnf {
 	 * @param pat
 	 * @return
 	 */
-	fun token(pat: Array<String>): Bnf {
-		elements.add(Leaf(pat))
+	fun token(vararg pat: String): Bnf {
+		elements.add(Leaf(pat.toList()))
 		return this
 	}
 
@@ -132,8 +138,8 @@ open class Bnf {
 	 * @param pat 符号
 	 * @return 这种格式的符号(跳
 	 */
-	fun sep(pat: Array<String>): Bnf {
-		elements.add(Skip(pat))
+	fun sep(vararg pat: String): Bnf {
+		elements.add(Skip(pat.toList()))
 		return this
 	}
 
@@ -154,7 +160,7 @@ open class Bnf {
 	 * @param parsers BNF
 	 * @return BNF
 	 */
-	fun or(parsers: List<Bnf>): Bnf {
+	fun or(vararg parsers: Bnf): Bnf {
 		elements.add(OrTree(parsers.toMutableList()))
 		return this
 	}
@@ -208,7 +214,7 @@ open class Bnf {
 		} else {
 			val otherWise = Bnf(this)
 			reset(null)
-			or(listOf(parser, otherWise))
+			or(parser, otherWise)
 		}
 		return this
 	}

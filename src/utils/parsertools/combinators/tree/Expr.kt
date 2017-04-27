@@ -1,12 +1,12 @@
 package utils.parsertools.combinators.tree
 
+import combinators.word.Operators
+import combinators.word.Precedence
 import utils.parsertools.ast.AstLeaf
 import utils.parsertools.ast.AstNode
 import utils.parsertools.combinators.Bnf
 import utils.parsertools.combinators.Element
 import utils.parsertools.combinators.TokenFactory
-import combinators.word.Operators
-import combinators.word.Precedence
 import utils.parsertools.lex.Lexer
 import java.text.ParseException
 
@@ -77,7 +77,7 @@ open class Expr(
 
 		if (token.isIdentifier()) {
 			// 从符号表里找对应的符号
-			return ops[token.getText()]
+			return ops[token.text]
 		} else {
 			return null
 		}

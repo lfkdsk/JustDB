@@ -11,9 +11,9 @@ import utils.parsertools.ast.Token
 
 interface Lexer {
 
-	fun nextToken(): Token = tokenAt(0)
+	fun nextToken(): Token
 
-	fun tokenAt(num: Int): Token
+	fun tokenAt(index: Int): Token
 
-	operator fun get(num: Int) = tokenAt(num)
+	operator fun get(index: Int) = tokenAt(index)
 }

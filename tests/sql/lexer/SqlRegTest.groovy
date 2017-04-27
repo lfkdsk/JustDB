@@ -1,7 +1,11 @@
 package sql.lexer
-
 /**
  * Created by liufengkai on 2017/4/27.
  */
-class SqlRegTest {
+class SqlRegTest extends GroovyTestCase {
+    void testGetHobbyReg() {
+        // sql
+        SqlReg sqlReg = new SqlReg()
+        println(sqlReg.hobbyReg)
+    }
 }
