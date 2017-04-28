@@ -62,3 +62,4 @@ gen### Java template
 hs_err_pid*
 
 .idea/
+/tests/sql/parser/SqlParserTest.groovy

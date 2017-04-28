@@ -1,2 +1,3 @@
-select lfkdsk from lf,lll where lf = lll;
-// create table lfkdsk ( dddd INT, abcdefg VARCHAR );
+select lfkdsk from fffff,ffff where fff=fff;
+create table eeee ( dddd INT, abcdefg VARCHAR );
+

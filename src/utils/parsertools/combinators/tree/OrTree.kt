@@ -10,12 +10,14 @@ import utils.parsertools.lex.Lexer
  * Created by liufengkai on 2017/4/24.
  */
 
-open class OrTree(private val bnfList: MutableList<Bnf>) : Element {
+open class OrTree(private val bnfList: List<Bnf>) : Element {
 
 	override fun parse(lexer: Lexer, nodes: MutableList<AstNode>) {
 		val parser = choose(lexer)
 		if (parser == null) {
-			throw ParseException("or tree cannot find parser for : ${lexer.tokenAt(0).text} at: ${lexer.tokenAt(0).lineNumber}")
+			throw ParseException("or tree cannot find parser for" +
+					" : ${lexer.tokenAt(0).text}" +
+					" at : ${lexer.tokenAt(0).lineNumber} line")
 		} else {
 			nodes.add(parser.parse(lexer))
 		}
@@ -26,7 +28,12 @@ open class OrTree(private val bnfList: MutableList<Bnf>) : Element {
 	}
 
 	protected fun choose(lexer: Lexer): Bnf? {
-		return bnfList.firstOrNull { it.match(lexer) }
+		bnfList.forEach {
+			if (it.match(lexer)) {
+				return it
+			}
+		}
+		return null
 	}
 
 
@@ -36,6 +43,6 @@ open class OrTree(private val bnfList: MutableList<Bnf>) : Element {
 	 * @param parser BNF
 	 */
 	fun insert(parser: Bnf) {
-		bnfList.add(0, parser)
+		bnfList.toMutableList().add(0, parser)
 	}
 }

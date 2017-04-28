@@ -161,7 +161,7 @@ open class Bnf {
 	 * @return BNF
 	 */
 	fun or(vararg parsers: Bnf): Bnf {
-		elements.add(OrTree(parsers.toMutableList()))
+		elements.add(OrTree(parsers.toList()))
 		return this
 	}
 

@@ -16,7 +16,7 @@ import utils.parsertools.lex.Lexer
  * Created by liufengkai on 2017/4/25.
  */
 
-class SqlParser() {
+class SqlParser {
 	// word set
 	var reserved: HashSet<String> = HashSet()
 
@@ -36,16 +36,16 @@ class SqlParser() {
 			.ast(constant)
 			.repeat(Bnf.rule().sep(",").ast(constant))
 
-	val field = Bnf.rule().identifier(reserved)
+	val field = id
 
 	val expr = Bnf.rule().or(field, constant)
 
 	val term = Bnf.rule(Term::class.java)
 			.ast(expr).sep("=").ast(expr)
 
-	val fieldList = Bnf.rule(FieldList::class.java)
-			.ast(field)
-			.repeat(Bnf.rule().sep(",").ast(field))
+	val fieldList = Bnf.rule()
+			.identifier(reserved)
+			.repeat(Bnf.rule().sep(",").identifier(reserved))
 
 //	val typeDef = Bnf.rule().enum(reserved)
 
@@ -57,7 +57,8 @@ class SqlParser() {
 			.repeat(Bnf.rule().sep(",").ast(fieldDef))
 
 	val createTable = Bnf.rule(CreateTable::class.java)
-			.sep("create", "table")
+			.sep("create")
+			.sep("table")
 			.identifier(reserved)
 			.sep("(")
 			.ast(fieldDefList)
@@ -79,8 +80,8 @@ class SqlParser() {
 			.repeat(Bnf.rule().sep("and").ast(term))
 
 	val tableNameList = Bnf.rule(TableNameList::class.java)
-			.ast(id)
-			.repeat(Bnf.rule().sep(",").ast(id))
+			.identifier(reserved)
+			.repeat(Bnf.rule().sep(",").identifier(reserved))
 
 	val selectList = Bnf.rule(SelectList::class.java)
 			.ast(field)
@@ -108,10 +109,6 @@ class SqlParser() {
 			.ast(field) // TODO fields?
 			.sep(")")
 
-	val create = Bnf.rule().or(
-			createTable, createIndex, createView
-	)
-
 	val delete = Bnf.rule(Delete::class.java)
 			.sep("delete", "from")
 			.identifier(reserved)
@@ -126,17 +123,26 @@ class SqlParser() {
 			.ast(expr)
 			.maybe(Bnf.rule().sep("where").ast(predicate))
 
-	val modify = Bnf.rule().or(
-			insert, delete, update, query
+	val create = Bnf.rule().or(
+			createTable.sep(";"),
+			createIndex.sep(";"),
+			createView.sep(";")
 	)
 
-	val singleCommand = Bnf.rule().or(create, modify).sep(";")
+	val modify = Bnf.rule().or(
+			insert.sep(";"),
+			delete.sep(";"),
+			update.sep(";"),
+			query.sep(";")
+	)
+
+	val singleCommand = Bnf.rule().or(create, modify)
 
 	val program = Bnf.rule().ast(singleCommand).sep(SqlToken.EOL)
 
 	init {
 		// init type def params
-		typeDefSet.add("VARHAR")
+		typeDefSet.add("VARCHAR")
 		typeDefSet.add("INT")
 	}
 

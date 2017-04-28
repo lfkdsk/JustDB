@@ -2,7 +2,6 @@ package utils.parsertools.combinators.tree
 
 import utils.parsertools.ast.AstNode
 import utils.parsertools.ast.Token
-import utils.parsertools.lex.Lexer
 
 
 /**
@@ -20,10 +19,6 @@ class Skip constructor(pat: List<String>) : Leaf(pat) {
 	 * @param token token
 	 */
 	override fun find(list: MutableList<AstNode>, token: Token) {
-
-	}
-
-	override fun parse(lexer: Lexer, nodes: MutableList<AstNode>) {
 
 	}
 }

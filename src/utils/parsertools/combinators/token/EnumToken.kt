@@ -9,6 +9,6 @@ import utils.parsertools.ast.Token
 class EnumToken(clazz: Class<out AstLeaf>,
                 var enumSet: Set<String> = hashSetOf()) : AbstractToken(clazz) {
 	override fun tokenTest(token: Token): Boolean {
-		return token.isIdentifier() && enumSet.contains(token.text)
+		return enumSet.contains(token.text)
 	}
 }
