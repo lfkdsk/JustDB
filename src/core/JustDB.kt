@@ -33,7 +33,6 @@ object JustDB {
 
 	private var dataBaseName = "just-db"
 
-
 	fun init(dataBaseName: String) {
 		this.dataBaseName = dataBaseName
 

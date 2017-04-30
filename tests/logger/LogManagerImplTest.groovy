@@ -1,6 +1,8 @@
 package logger
 
 /**
+ * Logger 单独测试没有问题
+ * 但是 All Test 似乎有时序性问题
  * Created by liufengkai on 2017/4/30.
  */
 class LogManagerImplTest extends GroovyTestCase {
