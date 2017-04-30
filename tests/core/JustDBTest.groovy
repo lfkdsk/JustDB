@@ -1,5 +1,7 @@
 package core
 
+import buffer.BufferManager
+import logger.LogManager
 import storage.FileManager
 
 /**
@@ -22,9 +24,13 @@ class JustDBTest extends GroovyTestCase {
 
     void testGetService() {
         println("JustDB getService ===> " + (justDB.getService(JustDB.FILE_MANAGER) as FileManager).toString())
+        println("JustDB getService ===> " + (justDB.getService(JustDB.LOGGER_MANAGER) as LogManager).toString())
+        println("JustDB getService ===> " + (justDB.getService(JustDB.BUFFER_MANAGER) as BufferManager).toString())
     }
 
     void testGet() {
         println("JustDB getService ===> " + (justDB[JustDB.FILE_MANAGER] as FileManager).toString())
+        println("JustDB getService ===> " + (justDB[JustDB.LOGGER_MANAGER] as LogManager).toString())
+        println("JustDB getService ===> " + (justDB[JustDB.BUFFER_MANAGER] as BufferManager).toString())
     }
 }

@@ -30,7 +30,6 @@ class ExPage {
 		}
 	}
 
-
 	private val contents = ByteBuffer.allocateDirect(BLOCK_SIZE)
 
 	private val fileManager = JustDB[JustDB.FILE_MANAGER] as FileManager

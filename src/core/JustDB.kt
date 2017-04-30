@@ -50,7 +50,7 @@ object JustDB {
 
 	private fun initLogManager(logFile: String): LogManager {
 		val logManager: LogManager = LogManagerImpl(logFile)
-		systemServersSet.put(FILE_MANAGER, logManager)
+		systemServersSet.put(LOGGER_MANAGER, logManager)
 		return logManager
 	}
 

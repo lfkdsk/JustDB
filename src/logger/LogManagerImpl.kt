@@ -30,6 +30,7 @@ class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
 		} else {
 			currentBlock = Block(logFile, logFileSize - 1)
 			page.read(currentBlock)
+			currentPos = getLastPos() + INT_SIZE
 		}
 	}
 
@@ -137,12 +138,14 @@ class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
 		init {
 			page.read(currentBlock)
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
+			println("currentRecord $currentRecord")
 		}
 
 		override operator fun next(): LogRecord {
 			if (currentRecord == 0)
 				moveToNextBlock()
 			currentRecord = page.getInt(currentRecord)
+			println("currentRecord $currentRecord")
 			return LogRecord(page, currentRecord + INT_SIZE)
 		}
 

@@ -11,8 +11,10 @@ class LogManagerImplTest extends GroovyTestCase {
         manager = new LogManagerImpl()
     }
 
-    void testFlush() {
-        manager.flush(10)
+    void testIterator() {
+        for (LogRecord record : manager) {
+            println("=====> " + record.toString())
+        }
     }
 
     void testAppend() {
@@ -21,12 +23,10 @@ class LogManagerImplTest extends GroovyTestCase {
             list.add(i + " + message")
         }
         manager.append(list.toArray())
-        manager.flush(11)
+        manager.flush(10)
     }
 
-    void testIterator() {
-        for (LogRecord record : manager) {
-            println("=====> " + record.toString())
-        }
+    void testFlush() {
+//        manager.flush(10)
     }
 }
