@@ -13,7 +13,7 @@ import java.nio.charset.Charset
  * Str save to a page. Page save to a block.
  * Created by liufengkai on 2017/4/30.
  */
-class ExPage {
+class ExPage() {
 	companion object default {
 		val BLOCK_SIZE = 400
 		val INT_SIZE = 4
@@ -31,6 +31,7 @@ class ExPage {
 	private val contents = ByteBuffer.allocateDirect(BLOCK_SIZE)
 
 	private val fileManager: FileManager = JustDB.getInstance()[JustDB.FILE_MANAGER] as FileManager
+
 
 	/**
 	 * Populates the page with the contents of the specified disk block.

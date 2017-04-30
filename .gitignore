@@ -41,7 +41,7 @@ gen### Java template
 # Compiled class file
 *.class
 
-# Log file
+# LogRecord file
 *.log
 
 # BlueJ files
