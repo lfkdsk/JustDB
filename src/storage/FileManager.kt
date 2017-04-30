@@ -7,9 +7,11 @@ import java.nio.ByteBuffer
  * Created by liufengkai on 2017/4/30.
  */
 interface FileManager : SystemService {
-	override fun read(block: Block, byteBuffer: ByteBuffer)
+	fun blockNumber(filename: String): Int
 
-	override fun write(block: Block, byteBuffer: ByteBuffer)
+	fun read(block: Block, byteBuffer: ByteBuffer)
 
-	override fun append(filename: String, byteBuffer: ByteBuffer): Block
+	fun write(block: Block, byteBuffer: ByteBuffer)
+
+	fun append(filename: String, byteBuffer: ByteBuffer): Block
 }

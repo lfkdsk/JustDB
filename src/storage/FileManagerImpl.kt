@@ -72,7 +72,7 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 		return blk
 	}
 
-	@Synchronized private
+	@Synchronized override
 	fun blockNumber(filename: String): Int {
 		try {
 			val fc = getFile(filename)
