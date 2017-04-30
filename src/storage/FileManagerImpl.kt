@@ -34,10 +34,6 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 				.forEach { File(dataBaseDir, it).delete() }
 	}
 
-	companion object {
-		val suffix: String = "just"
-	}
-
 	constructor(databaseName: String)
 			: this(databaseName, "./tests/databasetemp/")
 //	constructor(databaseName: String)
@@ -93,7 +89,6 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 	}
 
 	private fun getFile(fileName: String): FileChannel {
-		val fullName = "$fileName.$suffix"
-		return openFiles[fullName] ?: createNewTableChannel(fullName)
+		return openFiles[fileName] ?: createNewTableChannel(fileName)
 	}
 }

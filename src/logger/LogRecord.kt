@@ -31,4 +31,6 @@ class LogRecord(private val page: ExPage, private var pos: Int) {
 		pos += strSize(result.length)
 		return result
 	}
+
+
 }

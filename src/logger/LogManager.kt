@@ -5,8 +5,10 @@ import core.SystemService
 /**
  * Created by liufengkai on 2017/4/30.
  */
-interface LogManager : SystemService {
+interface LogManager : SystemService, Iterable<LogRecord> {
 	fun flush(recordStored: Int)
 
 	fun append(rec: Array<Any>): Int
+
+	override fun iterator(): Iterator<LogRecord>
 }

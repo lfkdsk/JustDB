@@ -3,10 +3,10 @@ package storage
 /**
  * Block in File
  * @param fileName : Block's file Name
- * @param blockName: Block Name
+ * @param blockNumber: Block Number
  * Created by liufengkai on 2017/4/24.
  */
-class Block(val fileName: String, val blockNumber: Int) {
+class Block(val fileName: String, var blockNumber: Int) {
 
 	override fun toString(): String {
 		return "Block(fileName='$fileName', blockName='$blockNumber')"

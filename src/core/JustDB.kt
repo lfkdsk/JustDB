@@ -1,9 +1,9 @@
 package core
 
+import logger.LogManager
 import logger.LogManagerImpl
 import storage.FileManager
 import storage.FileManagerImpl
-import java.util.logging.LogManager
 
 /**
  * Created by liufengkai on 2017/4/30.
@@ -31,12 +31,12 @@ interface SystemService {
 object JustDB {
 	const val FILE_MANAGER = "FILE_MANAGER"
 	const val LOGGER_MANAGER = "LOGGER_MANAGER"
+	const val logFileName = "just-log.log"
 
 	private val systemServersSet: MutableMap<String, SystemService> = HashMap()
 
 	private var dataBaseName = "just-db"
 
-	private val logFileName = "just-log.log"
 
 	fun init(dataBaseName: String) {
 		this.dataBaseName = dataBaseName

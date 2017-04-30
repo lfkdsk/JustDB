@@ -11,7 +11,7 @@ import storage.FileManager
 /**
  * Created by liufengkai on 2017/4/30.
  */
-class LogManagerImpl(val logFile: String) : LogManager, Iterable<LogRecord> {
+class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
 
 	private val page = ExPage()
 	private var currentBlock: Block
@@ -91,8 +91,8 @@ class LogManagerImpl(val logFile: String) : LogManager, Iterable<LogRecord> {
 	private fun appendVal(value: Any) {
 		if (value is String)
 			page.setString(currentPos, value)
-		else
-			page.setInt(currentPos, value as Int)
+		else if (value is Int)
+			page.setInt(currentPos, value)
 		currentPos += sizeOfObject(value)
 	}
 
@@ -159,4 +159,6 @@ class LogManagerImpl(val logFile: String) : LogManager, Iterable<LogRecord> {
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
 		}
 	}
+
+
 }
