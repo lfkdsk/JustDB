@@ -9,28 +9,12 @@ import storage.FileManagerImpl
  * Created by liufengkai on 2017/4/30.
  */
 
-interface SystemService {
-
-//	/**
-//	 * File Manager Interface
-//	 */
-//	fun read(block: Block, byteBuffer: ByteBuffer)
-//
-//	fun write(block: Block, byteBuffer: ByteBuffer)
-//
-//	fun append(filename: String, byteBuffer: ByteBuffer): Block
-//
-//	/**
-//	 * Logger Manager Interface
-//	 */
-//	fun flush(recordStored: Int)
-//
-//	fun append(rec: Array<Any>): Int
-}
+interface SystemService
 
 object JustDB {
 	const val FILE_MANAGER = "FILE_MANAGER"
 	const val LOGGER_MANAGER = "LOGGER_MANAGER"
+	const val BUFFER_MANAGER = "BUFFER_MANAGER"
 	const val logFileName = "just-log.log"
 
 	private val systemServersSet: MutableMap<String, SystemService> = HashMap()
@@ -38,9 +22,12 @@ object JustDB {
 	private var dataBaseName = "just-db"
 
 
+
 	fun init(dataBaseName: String) {
 		this.dataBaseName = dataBaseName
+
 		initFileManager(dataBaseName)
+		initLogManager(logFileName)
 	}
 
 	private fun initFileManager(dataBaseName: String): FileManager {
@@ -60,6 +47,7 @@ object JustDB {
 				when (serName) {
 					FILE_MANAGER -> initFileManager(dataBaseName)
 					LOGGER_MANAGER -> initLogManager(logFileName)
+
 					else -> {
 						throw Exception("can not find service: $serName")
 					}
@@ -67,5 +55,4 @@ object JustDB {
 	}
 
 	operator fun get(serName: String) = getService(serName)
-
 }
