@@ -2,7 +2,7 @@ package core
 
 import storage.Block
 import storage.FileManager
-import storage.SimpleFileManagerImpl
+import storage.FileManagerImpl
 import java.nio.ByteBuffer
 
 /**
@@ -51,7 +51,7 @@ class JustDB private constructor() {
 	}
 
 	private fun initFileManager(dataBaseName: String): FileManager {
-		val fileManager: FileManager = SimpleFileManagerImpl(dataBaseName)
+		val fileManager: FileManager = FileManagerImpl(dataBaseName)
 		systemServersSet.put(FILE_MANAGER, fileManager)
 		return fileManager
 	}

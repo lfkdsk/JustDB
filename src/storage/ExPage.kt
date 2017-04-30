@@ -79,9 +79,10 @@ class ExPage {
 	 * @param value the integer to be written to the page
 	 */
 	@Synchronized
-	fun setInt(offset: Int, value: Int) {
+	fun setInt(offset: Int, value: Int): Int {
 		contents.position(offset)
 		contents.putInt(value)
+		return value
 	}
 
 	/**

@@ -10,7 +10,7 @@ import java.nio.channels.FileChannel
 /**
  * Created by liufengkai on 2017/4/24.
  */
-class SimpleFileManagerImpl(databaseName: String, homeDir: String)
+class FileManagerImpl(databaseName: String, homeDir: String)
 	: FileManager {
 
 	private val dataBaseDir: File = File(homeDir, databaseName)
@@ -34,8 +34,14 @@ class SimpleFileManagerImpl(databaseName: String, homeDir: String)
 				.forEach { File(dataBaseDir, it).delete() }
 	}
 
+	companion object {
+		val suffix: String = "just"
+	}
+
 	constructor(databaseName: String)
-			: this(databaseName, System.getProperty("user.home"))
+			: this(databaseName, "./tests/databasetemp/")
+//	constructor(databaseName: String)
+//			: this(databaseName, System.getProperty("user.home"))
 
 	override fun read(block: Block, byteBuffer: ByteBuffer) {
 		try {
@@ -87,6 +93,7 @@ class SimpleFileManagerImpl(databaseName: String, homeDir: String)
 	}
 
 	private fun getFile(fileName: String): FileChannel {
-		return openFiles[fileName] ?: createNewTableChannel(fileName)
+		val fullName = "$fileName.$suffix"
+		return openFiles[fullName] ?: createNewTableChannel(fullName)
 	}
 }
