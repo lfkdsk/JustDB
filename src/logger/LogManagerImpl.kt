@@ -3,9 +3,9 @@ package logger
 import core.JustDB
 import storage.Block
 import storage.ExPage
-import storage.ExPage.default.BLOCK_SIZE
-import storage.ExPage.default.INT_SIZE
-import storage.ExPage.default.strSize
+import storage.ExPage.DEFAULT.BLOCK_SIZE
+import storage.ExPage.DEFAULT.INT_SIZE
+import storage.ExPage.DEFAULT.strSize
 import storage.FileManager
 
 /**
@@ -15,10 +15,10 @@ class LogManagerImpl(val logFile: String) : LogManager, Iterable<LogRecord> {
 
 	private val page = ExPage()
 	private var currentBlock: Block
-	private var currentPos: Int = 0
+	private var currentPos = 0
 
 	init {
-		val fileManager: FileManager = JustDB.getInstance()[JustDB.FILE_MANAGER] as FileManager
+		val fileManager: FileManager = JustDB[JustDB.FILE_MANAGER] as FileManager
 		val logFileSize: Int = fileManager.blockNumber(logFile)
 		if (logFileSize == 0) {
 			// save last record position
@@ -124,8 +124,7 @@ class LogManagerImpl(val logFile: String) : LogManager, Iterable<LogRecord> {
 	}
 
 	@Synchronized
-	override
-	fun iterator(): Iterator<LogRecord> {
+	override operator fun iterator(): Iterator<LogRecord> {
 		flush()
 		return LogIterator(currentBlock)
 	}
@@ -140,17 +139,15 @@ class LogManagerImpl(val logFile: String) : LogManager, Iterable<LogRecord> {
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
 		}
 
-
-		override fun next(): LogRecord {
+		override operator fun next(): LogRecord {
 			if (currentRecord == 0)
 				moveToNextBlock()
 			currentRecord = page.getInt(currentRecord)
 			return LogRecord(page, currentRecord + INT_SIZE)
 		}
 
-		override fun hasNext(): Boolean {
-			return currentRecord > 0 || currentBlock.blockNumber > 0
-		}
+		override operator fun hasNext()
+				= currentRecord > 0 || currentBlock.blockNumber > 0
 
 		/**
 		 * Moves to the next log block in reverse order,

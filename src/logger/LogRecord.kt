@@ -1,8 +1,8 @@
 package logger
 
 import storage.ExPage
-import storage.ExPage.default.INT_SIZE
-import storage.ExPage.default.strSize
+import storage.ExPage.DEFAULT.INT_SIZE
+import storage.ExPage.DEFAULT.strSize
 
 /**
  * Simple Line Logger Record

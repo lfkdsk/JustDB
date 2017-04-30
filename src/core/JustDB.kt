@@ -1,5 +1,6 @@
 package core
 
+import logger.LogManagerImpl
 import storage.FileManager
 import storage.FileManagerImpl
 import java.util.logging.LogManager
