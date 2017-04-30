@@ -1,6 +1,6 @@
 package storage
 
-import storage.ExPage.default.BLOCK_SIZE
+import storage.ExPage.DEFAULT.BLOCK_SIZE
 import java.io.File
 import java.io.IOException
 import java.io.RandomAccessFile

@@ -21,25 +21,8 @@ interface SystemService {
 	fun append(filename: String, byteBuffer: ByteBuffer): Block
 }
 
-class JustDB private constructor() {
-
-	/**
-	 * static object block
-	 */
-	private object Initializer {
-		val singleTon = JustDB()
-	}
-
-	/**
-	 * static function
-	 */
-	companion object {
-		fun getInstance(): JustDB {
-			return Initializer.singleTon
-		}
-
-		val FILE_MANAGER = "FILE_MANAGER"
-	}
+object JustDB {
+	const val FILE_MANAGER = "FILE_MANAGER"
 
 	private val systemServersSet: MutableMap<String, SystemService> = HashMap()
 
@@ -56,9 +39,8 @@ class JustDB private constructor() {
 		return fileManager
 	}
 
-	fun getService(serName: String): SystemService {
-		return systemServersSet[serName] ?: initFileManager(dataBaseName)
-	}
+	fun getService(serName: String)
+			= systemServersSet[serName] ?: initFileManager(dataBaseName)
 
 	operator fun get(serName: String) = getService(serName)
 

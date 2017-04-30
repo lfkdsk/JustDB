@@ -12,7 +12,7 @@ class JustDBTest extends GroovyTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp()
-        justDB = JustDB.Initializer.singleTon
+        justDB = JustDB.INSTANCE
         justDB.init("lfkdsk")
     }
 

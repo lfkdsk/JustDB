@@ -14,29 +14,33 @@ import java.nio.charset.Charset
  * Created by liufengkai on 2017/4/30.
  */
 class ExPage {
-	companion object default {
-		val BLOCK_SIZE = 400
-		val INT_SIZE = 4
+	companion object DEFAULT {
+		const val BLOCK_SIZE = 400
+		const val INT_SIZE = 4
 		/**
 		 * @param n size of string
 		 * @return the maximum number of bytes required to store a string of size n
 		 */
 		fun strSize(n: Int): Int {
-			val bytesPerChar = Charset.defaultCharset().newEncoder().maxBytesPerChar()
-			return INT_SIZE + n * bytesPerChar.toInt()
+			return INT_SIZE + n * Charset
+					.defaultCharset()
+					.newEncoder()
+					.maxBytesPerChar()
+					.toInt()
 		}
 	}
 
 
 	private val contents = ByteBuffer.allocateDirect(BLOCK_SIZE)
 
-	private val fileManager: FileManager = JustDB.getInstance()[JustDB.FILE_MANAGER] as FileManager
+	private val fileManager = JustDB[JustDB.FILE_MANAGER] as FileManager
 
 	/**
 	 * Populates the page with the contents of the specified disk block.
 	 * @param block a reference to a disk block
 	 */
-	@Synchronized fun read(block: Block) {
+	@Synchronized
+	fun read(block: Block) {
 		fileManager.read(block, contents)
 	}
 
@@ -44,7 +48,8 @@ class ExPage {
 	 * Writes the contents of the page to the specified disk block.
 	 * @param block a reference to a disk block
 	 */
-	@Synchronized fun write(block: Block) {
+	@Synchronized
+	fun write(block: Block) {
 		fileManager.write(block, contents)
 	}
 
@@ -54,9 +59,9 @@ class ExPage {
 	 * *
 	 * @return the reference to the newly-created disk block
 	 */
-	@Synchronized fun append(filename: String): Block {
-		return fileManager.append(filename, contents)
-	}
+	@Synchronized
+	fun append(filename: String)
+			= fileManager.append(filename, contents)
 
 	/**
 	 * Returns the integer value at a specified offset of the page.
@@ -98,7 +103,7 @@ class ExPage {
 		contents.position(offset)
 		val len = contents.int
 		val byteVal = ByteArray(len)
-		contents.get(byteVal)
+		contents[byteVal] // FIXME I don't understand why you didn't use the return value -- ice1000
 		return String(byteVal)
 	}
 
@@ -111,8 +116,9 @@ class ExPage {
 	@Synchronized
 	fun setString(offset: Int, value: String) {
 		contents.position(offset)
-		val byteVal = value.toByteArray()
-		contents.putInt(byteVal.size)
-		contents.put(byteVal)
+		value.toByteArray().run {
+			contents.putInt(size)
+			contents.put(this)
+		}
 	}
 }
