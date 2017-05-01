@@ -5,17 +5,17 @@ import logger.LogRecord
 /**
  * Created by liufengkai on 2017/5/1.
  */
-class CommitRecord(val transaction: Int) : AbsLogRecord() {
+class RollBackRecord(val transaction: Int) : AbsLogRecord() {
 
 	constructor(logRecord: LogRecord) : this(logRecord.nextInt())
 
 	override fun writeToLog(): Int {
-		val rec = arrayOf(LogType.COMMIT, transaction)
+		val rec = arrayOf(LogType.ROLLBACK, transaction)
 		return logManager.append(rec)
 	}
 
 	override fun op(): LogType {
-		return LogType.COMMIT
+		return LogType.ROLLBACK
 	}
 
 	override fun transactionNumber(): Int {
@@ -25,6 +25,7 @@ class CommitRecord(val transaction: Int) : AbsLogRecord() {
 	override fun undo(transaction: Int) {}
 
 	override fun toString(): String {
-		return "CommitRecord(transaction=$transaction)"
+		return "RollBackRecord(transaction=$transaction)"
 	}
+
 }

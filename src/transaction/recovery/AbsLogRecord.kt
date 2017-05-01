@@ -6,17 +6,18 @@ import logger.LogManager
 /**
  * Created by liufengkai on 2017/5/1.
  */
-enum class LogType() {
-	CHECKPOINT,
-	START,
-	COMMIT,
-	ROLLBACK,
-	SETINT,
-	SETSTRING
+enum class LogType(val value: Int) {
+	CHECKPOINT(0),
+	START(1),
+	COMMIT(2),
+	ROLLBACK(3),
+	SETINT(4),
+	SETSTRING(5)
 }
 
-abstract class AbsLogRecord {
+class CanNotFindLogRecord : Exception()
 
+abstract class AbsLogRecord {
 
 	val logManager: LogManager = JustDB[JustDB.LOGGER_MANAGER] as LogManager
 
@@ -46,6 +47,26 @@ abstract class AbsLogRecord {
 	 * @param transaction the id of the transaction that is performing the undo.
 	 */
 	abstract fun undo(transaction: Int)
+}
 
+class AbsLogRecordIterator : Iterator<AbsLogRecord> {
+	private val iterator = (JustDB[JustDB.LOGGER_MANAGER] as LogManager).iterator()
 
+	override fun hasNext(): Boolean {
+		return iterator.hasNext()
+	}
+
+	override fun next(): AbsLogRecord {
+		val rec = iterator.next()
+		val op = rec.nextInt()
+		when (op) {
+			LogType.CHECKPOINT.value -> return CheckPointRecord(rec)
+			LogType.START.value -> return StartRecord(rec)
+			LogType.COMMIT.value -> return CommitRecord(rec)
+			LogType.ROLLBACK.value -> return RollBackRecord(rec)
+			LogType.SETINT.value -> return SetIntLogRecord(rec)
+			LogType.SETSTRING.value -> return SetStringLogRecord(rec)
+			else -> throw CanNotFindLogRecord()
+		}
+	}
 }
