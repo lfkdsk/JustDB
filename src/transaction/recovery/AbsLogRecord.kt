@@ -6,13 +6,13 @@ import logger.LogManager
 /**
  * Created by liufengkai on 2017/5/1.
  */
-enum class LogType(value: Int) {
-	CHECKPOINT(0),
-	START(1),
-	COMMIT(2),
-	ROLLBACK(3),
-	SETINT(4),
-	SETSTRING(5)
+enum class LogType() {
+	CHECKPOINT,
+	START,
+	COMMIT,
+	ROLLBACK,
+	SETINT,
+	SETSTRING
 }
 
 abstract class AbsLogRecord {

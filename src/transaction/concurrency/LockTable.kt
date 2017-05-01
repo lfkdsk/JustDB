@@ -15,13 +15,13 @@ object LockTable {
 
 	private val locks: MutableMap<Block, Int> = HashMap()
 	// common queue
-	private val lockObject = java.lang.Object()
+	private var lockObject = java.lang.Object()
 
-	@Synchronized
-	fun writeLock(block: Block) {
+	fun writeLock(block: Block) = synchronized(lockObject) {
 		try {
 			val timeStamp: Long = System.currentTimeMillis()
 			while (hasOtherSLocks(block) && !waitingTooLong(timeStamp)) {
+				println("blomeck $block startTime: $timeStamp wait write lock")
 				// thread sleep
 				lockObject.wait(MAX_TIME)
 			}
@@ -31,34 +31,38 @@ object LockTable {
 
 			// add lock
 			locks.put(block, -1)
+			println("blomeck $block startTime: $timeStamp get write lock")
 		} catch(e: InterruptedException) {
 			throw LockAbortException()
 		}
 	}
 
-	@Synchronized
-	fun readLock(block: Block) {
+	fun readLock(block: Block) = synchronized(lockObject) {
 		try {
-			val timestamp = System.currentTimeMillis()
+			val timeStamp = System.currentTimeMillis()
 			// if don't have x lock , can add read lock to it
-			while (hasXLock(block) && !waitingTooLong(timestamp))
+			while (hasXLock(block) && !waitingTooLong(timeStamp)) {
+				println("blomeck $block startTime: $timeStamp wait read lock")
 				lockObject.wait(MAX_TIME)
+			}
 
 			if (hasXLock(block))
 				throw LockAbortException()
 
 			locks.put(block, this[block] + 1)
+
+			println("blomeck $block startTime: $timeStamp get read lock")
 		} catch (e: InterruptedException) {
 			throw LockAbortException()
 		}
 	}
 
-	@Synchronized
-	fun unlock(block: Block) {
-		val value = getLockVal(block)
-		if (value > 1)
+	fun unlock(block: Block) = synchronized(lockObject) {
+		println("unlock $block")
+		val value = this[block]
+		if (value > 1) {
 			locks.put(block, value - 1)
-		else {
+		} else {
 			locks.remove(block)
 			lockObject.notifyAll()
 		}
