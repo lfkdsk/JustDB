@@ -22,6 +22,7 @@ class LogManagerImplTest extends GroovyTestCase {
     void testAppend() {
         for (int j = 0; j < 5; j++) {
             ArrayList<String> list = new ArrayList<>();
+
             for (int i = 0; i < 10; i++) {
                 list.add(i + " + message")
             }
