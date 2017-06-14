@@ -86,6 +86,7 @@ class ExPage {
 	fun setInt(offset: Int, value: Int): Int {
 		contents.position(offset)
 		contents.putInt(value)
+
 		return value
 	}
 
@@ -103,6 +104,7 @@ class ExPage {
 		val len = contents.int
 		val byteVal = ByteArray(len)
 		contents[byteVal] // FIXME I don't understand why you didn't use the return value -- ice1000
+
 		return String(byteVal)
 	}
 
@@ -113,11 +115,13 @@ class ExPage {
 	 * @param value the string to be written to the page
 	 */
 	@Synchronized
-	fun setString(offset: Int, value: String) {
+	fun setString(offset: Int, value: String): String {
 		contents.position(offset)
 		value.toByteArray().run {
 			contents.putInt(size)
 			contents.put(this)
 		}
+
+		return value
 	}
 }

@@ -23,6 +23,7 @@ class ExPageTest extends GroovyTestCase {
         p3.read(blk);
         String s = p3.getString(20);
         println("re-get ===> " + s)
+        assertEquals("hello", s)
     }
 
     void testGetInt() {
@@ -30,6 +31,7 @@ class ExPageTest extends GroovyTestCase {
         exPage.read(block)
         int n = exPage.getInt(0);
         println("n ===> " + n)
+
     }
 
     void testSetInt() {
