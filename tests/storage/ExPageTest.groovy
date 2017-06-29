@@ -31,7 +31,6 @@ class ExPageTest extends GroovyTestCase {
         exPage.read(block)
         int n = exPage.getInt(0);
         println("n ===> " + n)
-
     }
 
     void testSetInt() {

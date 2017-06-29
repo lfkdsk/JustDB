@@ -16,9 +16,9 @@ class LockTableTest extends GroovyTestCase {
     void testWriteLock() {
         Block block = new Block("testStr", 0)
         lockTable.readLock(block)
-//        lockTable.readLock(block)
-        lockTable.writeLock(block)
+        lockTable.readLock(block)
         lockTable.unlock(block)
+        lockTable.writeLock(block)
     }
 
     void testReadLock() {
