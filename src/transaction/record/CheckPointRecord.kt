@@ -1,4 +1,4 @@
-package transaction.recovery
+package transaction.record
 
 import core.JustDB
 import logger.LogRecord

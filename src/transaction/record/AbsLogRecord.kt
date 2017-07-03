@@ -1,4 +1,4 @@
-package transaction.recovery
+package transaction.record
 
 import core.JustDB
 import core.LogManager
@@ -35,9 +35,9 @@ abstract class AbsLogRecord(justDB: JustDB) {
 	abstract fun op(): LogType
 
 	/**
-	 * Returns the transaction id stored with
+	 * Returns the transactionID id stored with
 	 * the log record.
-	 * @return the log record's transaction id
+	 * @return the log record's transactionID id
 	 */
 	abstract fun transactionNumber(): Int
 
@@ -45,7 +45,7 @@ abstract class AbsLogRecord(justDB: JustDB) {
 	 * Undoes the operation encoded by this log record.
 	 * The only log record types for which this method
 	 * does anything interesting are SETINT and SETSTRING.
-	 * @param transaction the id of the transaction that is performing the undo.
+	 * @param transaction the id of the transactionID that is performing the undo.
 	 */
 	abstract fun undo(transaction: Int)
 }

@@ -12,7 +12,7 @@ class Buffer(justDB: JustDB) {
 	private val contents: ExPage = ExPage(justDB)
 	private var block: Block? = null
 	private var pins = 0
-	private var modifiedBy = -1
+	private var modifiedBy: Int = -1
 	/**
 	 * write log seq number
 	 * modify by write event
@@ -86,7 +86,7 @@ class Buffer(justDB: JustDB) {
 
 	/**
 	 * @param transaction tranNumber
-	 * @return true if the transaction modified the buffer
+	 * @return true if the transactionID modified the buffer
 	 */
 	internal fun isModifiedBy(transaction: Int): Boolean {
 		return transaction == modifiedBy

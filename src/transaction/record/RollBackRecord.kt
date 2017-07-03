@@ -1,4 +1,4 @@
-package transaction.recovery
+package transaction.record
 
 import core.JustDB
 import logger.LogRecord
@@ -6,28 +6,27 @@ import logger.LogRecord
 /**
  * Created by liufengkai on 2017/5/1.
  */
-class StartRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {
+class RollBackRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {
+
 	constructor(justDB: JustDB, logRecord: LogRecord) : this(justDB, logRecord.nextInt())
 
 	override fun writeToLog(): Int {
-		val rec = listOf(LogType.START, transaction)
+		val rec = listOf(LogType.ROLLBACK.value, transaction)
 		return logManager.append(rec)
 	}
 
 	override fun op(): LogType {
-		return LogType.START
+		return LogType.ROLLBACK
 	}
 
 	override fun transactionNumber(): Int {
 		return transaction
 	}
 
-	override fun undo(transaction: Int) {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-	}
+	override fun undo(transaction: Int) {}
 
 	override fun toString(): String {
-		return "StartRecord(transaction=$transaction)"
+		return "RollBackRecord(transactionID=$transaction)"
 	}
 
 }

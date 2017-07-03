@@ -5,37 +5,38 @@ import core.BufferManager
 import core.JustDB
 import core.LogManager
 import storage.Block
+import transaction.record.*
 import java.util.*
 
 /**
  * Created by liufengkai on 2017/5/1.
  */
-class RecoveryManager(val justDB: JustDB, val transaction: Int) : Iterable<AbsLogRecord> {
+class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<AbsLogRecord> {
 
 	private val bufferManager = justDB.BufferManager()
 	private val loggerManager = justDB.LogManager()
 
 	init {
-		StartRecord(justDB, transaction).writeToLog()
+		StartRecord(justDB, transactionID).writeToLog()
 	}
 
 	fun commit() {
-		bufferManager.flushAll(transaction)
-		val lsn = CommitRecord(justDB, transaction).writeToLog()
+		bufferManager.flushAll(transactionID)
+		val lsn = CommitRecord(justDB, transactionID).writeToLog()
 		loggerManager.flush(lsn)
 	}
 
 	fun rollback() {
 		// do rollback
-		this.filter { it.transactionNumber() == transaction }
+		this.filter { it.transactionNumber() == transactionID }
 				.forEach {
 					if (it.op() == LogType.START)
 						return
-					it.undo(transaction)
+					it.undo(transactionID)
 				}
 		// ----
-		bufferManager.flushAll(transaction)
-		loggerManager.flush(RollBackRecord(justDB, transaction).writeToLog())
+		bufferManager.flushAll(transactionID)
+		loggerManager.flush(RollBackRecord(justDB, transactionID).writeToLog())
 	}
 
 	fun recover() {
@@ -53,8 +54,8 @@ class RecoveryManager(val justDB: JustDB, val transaction: Int) : Iterable<AbsLo
 			}
 		}
 		// ----
-		bufferManager.flushAll(transaction)
-		loggerManager.flush(CheckPointRecord(justDB, transaction).writeToLog())
+		bufferManager.flushAll(transactionID)
+		loggerManager.flush(CheckPointRecord(justDB, transactionID).writeToLog())
 	}
 
 	fun setInt(buff: Buffer, offset: Int, newval: Int): Int {
@@ -64,7 +65,7 @@ class RecoveryManager(val justDB: JustDB, val transaction: Int) : Iterable<AbsLo
 			if (isTempBlock(blk)) {
 				return -1
 			} else {
-				return SetIntLogRecord(justDB, transaction, blk, offset, oldVal).writeToLog()
+				return SetIntLogRecord(justDB, transactionID, blk, offset, oldVal).writeToLog()
 			}
 		}
 		return -1
@@ -77,7 +78,7 @@ class RecoveryManager(val justDB: JustDB, val transaction: Int) : Iterable<AbsLo
 			if (isTempBlock(blk)) {
 				return -1
 			} else {
-				return SetStringLogRecord(justDB, transaction, blk, offset, oldVal).writeToLog()
+				return SetStringLogRecord(justDB, transactionID, blk, offset, oldVal).writeToLog()
 			}
 		}
 		return -1

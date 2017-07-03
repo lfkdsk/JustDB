@@ -1,4 +1,4 @@
-package transaction.recovery
+package transaction.record
 
 import core.JustDB
 import logger.LogRecord
@@ -11,7 +11,7 @@ class CommitRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) 
 	constructor(justDB: JustDB, logRecord: LogRecord) : this(justDB, logRecord.nextInt())
 
 	override fun writeToLog(): Int {
-		val rec = listOf(LogType.COMMIT, transaction)
+		val rec = listOf(LogType.COMMIT.value, transaction)
 		return logManager.append(rec)
 	}
 
@@ -26,6 +26,6 @@ class CommitRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) 
 	override fun undo(transaction: Int) {}
 
 	override fun toString(): String {
-		return "CommitRecord(transaction=$transaction)"
+		return "CommitRecord(transactionID=$transaction)"
 	}
 }
