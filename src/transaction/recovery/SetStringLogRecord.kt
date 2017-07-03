@@ -2,6 +2,7 @@ package transaction.recovery
 
 import buffer.BufferManager
 import core.JustDB
+import core.JustDBService
 import logger.LogRecord
 import storage.Block
 
@@ -34,7 +35,7 @@ class SetStringLogRecord(val transaction: Int,
 	}
 
 	override fun undo(transaction: Int) {
-		val bufferManager = JustDB[JustDB.BUFFER_MANAGER] as BufferManager
+		val bufferManager = JustDB[JustDBService.BUFFER_MANAGER] as BufferManager
 		val buff = bufferManager.pin(block)
 		buff?.let {
 			buff.setString(offset, value, transaction, -1)

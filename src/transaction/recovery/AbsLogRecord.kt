@@ -1,6 +1,7 @@
 package transaction.recovery
 
 import core.JustDB
+import core.JustDBService
 import logger.LogManager
 
 /**
@@ -19,7 +20,7 @@ class CanNotFindLogRecord : Exception()
 
 abstract class AbsLogRecord {
 
-	val logManager: LogManager = JustDB[JustDB.LOGGER_MANAGER] as LogManager
+	val logManager: LogManager = JustDB[JustDBService.LOGGER_MANAGER] as LogManager
 
 	/**
 	 * Writes the record to the log and returns its LSN.
@@ -50,7 +51,7 @@ abstract class AbsLogRecord {
 }
 
 class AbsLogRecordIterator : Iterator<AbsLogRecord> {
-	private val iterator = (JustDB[JustDB.LOGGER_MANAGER] as LogManager).iterator()
+	private val iterator = (JustDB[JustDBService.LOGGER_MANAGER] as LogManager).iterator()
 
 	override fun hasNext(): Boolean {
 		return iterator.hasNext()

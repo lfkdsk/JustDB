@@ -3,6 +3,7 @@ package transaction.recovery
 import buffer.Buffer
 import buffer.BufferManager
 import core.JustDB
+import core.JustDBService
 import logger.LogManager
 import storage.Block
 import java.util.*
@@ -12,8 +13,8 @@ import java.util.*
  */
 class RecoveryManager(val transaction: Int) : Iterable<AbsLogRecord> {
 
-	private val bufferManager = JustDB[JustDB.BUFFER_MANAGER] as BufferManager
-	private val loggerManager = JustDB[JustDB.BUFFER_MANAGER] as LogManager
+	private val bufferManager = JustDB[JustDBService.BUFFER_MANAGER] as BufferManager
+	private val loggerManager = JustDB[JustDBService.BUFFER_MANAGER] as LogManager
 
 	init {
 		StartRecord(transaction).writeToLog()

@@ -1,6 +1,7 @@
 package storage
 
 import core.JustDB
+import core.JustDBService
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
@@ -32,7 +33,7 @@ class ExPage {
 
 	private val contents = ByteBuffer.allocateDirect(BLOCK_SIZE)
 
-	private val fileManager = JustDB[JustDB.FILE_MANAGER] as FileManager
+	private val fileManager = JustDB[JustDBService.FILE_MANAGER] as FileManager
 
 	/**
 	 * Populates the page with the contents of the specified disk block.

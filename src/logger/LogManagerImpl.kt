@@ -1,6 +1,7 @@
 package logger
 
 import core.JustDB
+import core.JustDBService
 import storage.Block
 import storage.ExPage
 import storage.ExPage.DEFAULT.BLOCK_SIZE
@@ -18,7 +19,7 @@ class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
 	private var currentPos = 0
 
 	init {
-		val fileManager: FileManager = JustDB[JustDB.FILE_MANAGER] as FileManager
+		val fileManager: FileManager = JustDB[JustDBService.FILE_MANAGER] as FileManager
 		val logFileSize: Int = fileManager.blockNumber(logFile)
 		if (logFileSize == 0) {
 			// save last record position

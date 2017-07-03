@@ -1,6 +1,7 @@
 package buffer
 
 import core.JustDB
+import core.JustDBService
 import logger.LogManager
 import storage.Block
 import storage.ExPage
@@ -20,7 +21,7 @@ class Buffer {
 	private var logSequenceNumber = -1
 
 	companion object {
-		val logManager: LogManager = JustDB[JustDB.LOGGER_MANAGER] as LogManager
+		val logManager: LogManager = JustDB[JustDBService.LOGGER_MANAGER] as LogManager
 	}
 
 	fun getInt(offset: Int): Int {
