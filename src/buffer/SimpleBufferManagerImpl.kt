@@ -1,13 +1,14 @@
 package buffer
 
+import core.JustDB
 import storage.Block
 
 /**
  * Created by liufengkai on 2017/4/30.
  */
-class SimpleBufferManagerImpl(bufferNumber: Int) : BufferManager {
+class SimpleBufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 
-	private val bufferPool: Array<Buffer> = Array(bufferNumber, { Buffer() })
+	private val bufferPool: Array<Buffer> = Array(bufferNumber, { Buffer(justDB) })
 	private var numAvailable: Int = bufferNumber
 
 	@Synchronized

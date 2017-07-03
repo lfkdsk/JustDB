@@ -1,7 +1,7 @@
 package transaction.recovery
 
 import core.JustDB
-import core.JustDBService
+import core.LogManager
 import logger.LogManager
 
 /**
@@ -18,9 +18,9 @@ enum class LogType(val value: Int) {
 
 class CanNotFindLogRecord : Exception()
 
-abstract class AbsLogRecord {
+abstract class AbsLogRecord(justDB: JustDB) {
 
-	val logManager: LogManager = JustDB[JustDBService.LOGGER_MANAGER] as LogManager
+	val logManager: LogManager = justDB.LogManager()
 
 	/**
 	 * Writes the record to the log and returns its LSN.
@@ -50,8 +50,8 @@ abstract class AbsLogRecord {
 	abstract fun undo(transaction: Int)
 }
 
-class AbsLogRecordIterator : Iterator<AbsLogRecord> {
-	private val iterator = (JustDB[JustDBService.LOGGER_MANAGER] as LogManager).iterator()
+class AbsLogRecordIterator(val justDB: JustDB) : Iterator<AbsLogRecord> {
+	private val iterator = (justDB.LogManager()).iterator()
 
 	override fun hasNext(): Boolean {
 		return iterator.hasNext()
@@ -61,12 +61,12 @@ class AbsLogRecordIterator : Iterator<AbsLogRecord> {
 		val rec = iterator.next()
 		val op = rec.nextInt()
 		when (op) {
-			LogType.CHECKPOINT.value -> return CheckPointRecord(rec)
-			LogType.START.value -> return StartRecord(rec)
-			LogType.COMMIT.value -> return CommitRecord(rec)
-			LogType.ROLLBACK.value -> return RollBackRecord(rec)
-			LogType.SETINT.value -> return SetIntLogRecord(rec)
-			LogType.SETSTRING.value -> return SetStringLogRecord(rec)
+			LogType.CHECKPOINT.value -> return CheckPointRecord(justDB, rec)
+			LogType.START.value -> return StartRecord(justDB, rec)
+			LogType.COMMIT.value -> return CommitRecord(justDB, rec)
+			LogType.ROLLBACK.value -> return RollBackRecord(justDB, rec)
+			LogType.SETINT.value -> return SetIntLogRecord(justDB, rec)
+			LogType.SETSTRING.value -> return SetStringLogRecord(justDB, rec)
 			else -> throw CanNotFindLogRecord()
 		}
 	}

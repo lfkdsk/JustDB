@@ -1,14 +1,15 @@
 package buffer
 
+import core.JustDB
 import storage.Block
 
 /**
  * Created by liufengkai on 2017/4/30.
  */
-class BufferManagerImpl(bufferNumber: Int) : BufferManager {
+class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	private val MAX_TIME: Long = 10000 // 10 seconds
 
-	private val simpleBufferManager: SimpleBufferManagerImpl = SimpleBufferManagerImpl(bufferNumber)
+	private val simpleBufferManager = SimpleBufferManagerImpl(justDB, bufferNumber)
 
 	private val lock = Object()
 

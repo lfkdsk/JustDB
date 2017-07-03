@@ -1,18 +1,19 @@
 package transaction.recovery
 
+import core.JustDB
 import logger.LogRecord
 
 /**
  * Created by liufengkai on 2017/5/1.
  */
-class CheckPointRecord : AbsLogRecord {
+class CheckPointRecord(justDB: JustDB) : AbsLogRecord(justDB) {
 
-	constructor(logRecord: LogRecord)
+	constructor(justDB: JustDB, logRecord: LogRecord) : this(justDB)
 
-	constructor(transaction: Int)
+	constructor(justDB: JustDB, transaction: Int) : this(justDB)
 
 	override fun writeToLog(): Int {
-		val rec = arrayOf<Any>(LogType.CHECKPOINT)
+		val rec = listOf<Any>(LogType.CHECKPOINT)
 		return logManager.append(rec)
 	}
 

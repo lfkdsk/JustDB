@@ -1,28 +1,29 @@
 package transaction.recovery
 
-import buffer.BufferManager
+import core.BufferManager
 import core.JustDB
-import core.JustDBService
 import logger.LogRecord
 import storage.Block
 
 /**
  * Created by liufengkai on 2017/5/1.
  */
-class SetStringLogRecord(val transaction: Int,
+class SetStringLogRecord(val justDB: JustDB,
+                         val transaction: Int,
                          val block: Block,
                          val offset: Int,
-                         val value: String) : AbsLogRecord() {
+                         val value: String) : AbsLogRecord(justDB) {
 
-	constructor(logRecord: LogRecord)
-			: this(logRecord.nextInt(),
+	constructor(justDB: JustDB, logRecord: LogRecord)
+			: this(justDB,
+			logRecord.nextInt(),
 			Block(logRecord.nextString(), logRecord.nextInt()),
 			logRecord.nextInt(),
 			logRecord.nextString())
 
 
 	override fun writeToLog(): Int {
-		val rec = arrayOf(LogType.SETSTRING, transaction, block.fileName, block.blockNumber, offset, value)
+		val rec = listOf(LogType.SETSTRING, transaction, block.fileName, block.blockNumber, offset, value)
 		return logManager.append(rec)
 	}
 
@@ -35,7 +36,7 @@ class SetStringLogRecord(val transaction: Int,
 	}
 
 	override fun undo(transaction: Int) {
-		val bufferManager = JustDB[JustDBService.BUFFER_MANAGER] as BufferManager
+		val bufferManager = justDB.BufferManager()
 		val buff = bufferManager.pin(block)
 		buff?.let {
 			buff.setString(offset, value, transaction, -1)

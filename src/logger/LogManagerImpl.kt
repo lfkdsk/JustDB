@@ -1,39 +1,61 @@
 package logger
 
+import core.FileManager
 import core.JustDB
-import core.JustDBService
 import storage.Block
 import storage.ExPage
 import storage.ExPage.DEFAULT.BLOCK_SIZE
 import storage.ExPage.DEFAULT.INT_SIZE
 import storage.ExPage.DEFAULT.strSize
-import storage.FileManager
+import utils.standard.If
 
 /**
  * Created by liufengkai on 2017/4/30.
  */
-class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
+class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileName) : LogManager {
 
-	private val page = ExPage()
-	private var currentBlock: Block
+	private val page = ExPage(justDB)
+
 	private var currentPos = 0
 
-	init {
-		val fileManager: FileManager = JustDB[JustDBService.FILE_MANAGER] as FileManager
-		val logFileSize: Int = fileManager.blockNumber(logFile)
-		if (logFileSize == 0) {
-			// save last record position
-			setLastRecordPos(0)
-			// reset pos
-			currentPos = INT_SIZE
-			// append to log page
-			currentBlock = page.append(logFile)
-		} else {
-			currentBlock = Block(logFile, logFileSize - 1)
-			page.read(currentBlock)
-			currentPos = getLastPos() + INT_SIZE
-		}
-	}
+	private var currentBlock: Block =
+			justDB.FileManager()
+					.blockNumber(logFile) // get block size
+					.If({ logFileSize -> logFileSize == 0 }, {
+						/**
+						 * initial logFile
+						 */
+						// save last record position
+						setLastRecordPos(0)
+						// reset pos
+						currentPos = INT_SIZE
+						// append to log page
+						return@If page.append(logFile)
+					}, { logFileSize ->
+						currentBlock = Block(logFile, logFileSize - 1)
+						page.read(currentBlock)
+						currentPos = getLastPos() + INT_SIZE
+						return@If currentBlock
+					})
+
+//	private fun initBlock(): Block {
+//		val currentBlock: Block
+//		val fileManager: FileManager = justDB.FileManager()
+//		val logFileSize: Int = fileManager.blockNumber(logFile)
+//		if (logFileSize == 0) {
+//			// save last record position
+//			setLastRecordPos(0)
+//			// reset pos
+//			currentPos = INT_SIZE
+//			// append to log page
+//			currentBlock = page.append(logFile)
+//		} else {
+//			currentBlock = Block(logFile, logFileSize - 1)
+//			page.read(currentBlock)
+//			currentPos = getLastPos() + INT_SIZE
+//		}
+//		return currentBlock
+//	}
 
 	companion object {
 		// last record pos
@@ -70,7 +92,7 @@ class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
 	}
 
 	@Synchronized
-	override fun append(rec: Array<Any>): Int {
+	override fun append(rec: List<Any>): Int {
 		// 4 bytes for the integer that points to the previous log record
 		val recordSize = INT_SIZE + rec.sumBy { sizeOfObject(it) }
 		// the log record doesn't fit,
@@ -128,11 +150,11 @@ class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
 	@Synchronized
 	override operator fun iterator(): Iterator<LogRecord> {
 		flush()
-		return LogIterator(currentBlock)
+		return LogIterator(justDB, currentBlock)
 	}
 
-	class LogIterator(var currentBlock: Block) : Iterator<LogRecord> {
-		private val page = ExPage()
+	class LogIterator(justDB: JustDB, var currentBlock: Block) : Iterator<LogRecord> {
+		private val page = ExPage(justDB)
 
 		private var currentRecord: Int
 
@@ -163,6 +185,4 @@ class LogManagerImpl(val logFile: String = JustDB.logFileName) : LogManager {
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
 		}
 	}
-
-
 }

@@ -1,15 +1,16 @@
 package transaction.recovery
 
+import core.JustDB
 import logger.LogRecord
 
 /**
  * Created by liufengkai on 2017/5/1.
  */
-class StartRecord(val transaction: Int) : AbsLogRecord() {
-	constructor(logRecord: LogRecord) : this(logRecord.nextInt())
+class StartRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {
+	constructor(justDB: JustDB, logRecord: LogRecord) : this(justDB, logRecord.nextInt())
 
 	override fun writeToLog(): Int {
-		val rec = arrayOf(LogType.START, transaction)
+		val rec = listOf(LogType.START, transaction)
 		return logManager.append(rec)
 	}
 

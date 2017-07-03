@@ -1,16 +1,15 @@
 package buffer
 
 import core.JustDB
-import core.JustDBService
-import logger.LogManager
+import core.LogManager
 import storage.Block
 import storage.ExPage
 
 /**
  * Created by liufengkai on 2017/4/30.
  */
-class Buffer {
-	private val contents: ExPage = ExPage()
+class Buffer(justDB: JustDB) {
+	private val contents: ExPage = ExPage(justDB)
 	private var block: Block? = null
 	private var pins = 0
 	private var modifiedBy = -1
@@ -19,10 +18,7 @@ class Buffer {
 	 * modify by write event
 	 */
 	private var logSequenceNumber = -1
-
-	companion object {
-		val logManager: LogManager = JustDB[JustDBService.LOGGER_MANAGER] as LogManager
-	}
+	private val logManager by lazyOf(justDB.LogManager())
 
 	fun getInt(offset: Int): Int {
 		return contents.getInt(offset)

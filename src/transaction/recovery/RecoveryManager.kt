@@ -1,28 +1,27 @@
 package transaction.recovery
 
 import buffer.Buffer
-import buffer.BufferManager
+import core.BufferManager
 import core.JustDB
-import core.JustDBService
-import logger.LogManager
+import core.LogManager
 import storage.Block
 import java.util.*
 
 /**
  * Created by liufengkai on 2017/5/1.
  */
-class RecoveryManager(val transaction: Int) : Iterable<AbsLogRecord> {
+class RecoveryManager(val justDB: JustDB, val transaction: Int) : Iterable<AbsLogRecord> {
 
-	private val bufferManager = JustDB[JustDBService.BUFFER_MANAGER] as BufferManager
-	private val loggerManager = JustDB[JustDBService.BUFFER_MANAGER] as LogManager
+	private val bufferManager = justDB.BufferManager()
+	private val loggerManager = justDB.LogManager()
 
 	init {
-		StartRecord(transaction).writeToLog()
+		StartRecord(justDB, transaction).writeToLog()
 	}
 
 	fun commit() {
 		bufferManager.flushAll(transaction)
-		val lsn = CommitRecord(transaction).writeToLog()
+		val lsn = CommitRecord(justDB, transaction).writeToLog()
 		loggerManager.flush(lsn)
 	}
 
@@ -36,7 +35,7 @@ class RecoveryManager(val transaction: Int) : Iterable<AbsLogRecord> {
 				}
 		// ----
 		bufferManager.flushAll(transaction)
-		loggerManager.flush(RollBackRecord(transaction).writeToLog())
+		loggerManager.flush(RollBackRecord(justDB, transaction).writeToLog())
 	}
 
 	fun recover() {
@@ -55,7 +54,7 @@ class RecoveryManager(val transaction: Int) : Iterable<AbsLogRecord> {
 		}
 		// ----
 		bufferManager.flushAll(transaction)
-		loggerManager.flush(CheckPointRecord(transaction).writeToLog())
+		loggerManager.flush(CheckPointRecord(justDB, transaction).writeToLog())
 	}
 
 	fun setInt(buff: Buffer, offset: Int, newval: Int): Int {
@@ -65,7 +64,7 @@ class RecoveryManager(val transaction: Int) : Iterable<AbsLogRecord> {
 			if (isTempBlock(blk)) {
 				return -1
 			} else {
-				return SetIntLogRecord(transaction, blk, offset, oldVal).writeToLog()
+				return SetIntLogRecord(justDB, transaction, blk, offset, oldVal).writeToLog()
 			}
 		}
 		return -1
@@ -78,7 +77,7 @@ class RecoveryManager(val transaction: Int) : Iterable<AbsLogRecord> {
 			if (isTempBlock(blk)) {
 				return -1
 			} else {
-				return SetStringLogRecord(transaction, blk, offset, oldVal).writeToLog()
+				return SetStringLogRecord(justDB, transaction, blk, offset, oldVal).writeToLog()
 			}
 		}
 		return -1
@@ -89,6 +88,6 @@ class RecoveryManager(val transaction: Int) : Iterable<AbsLogRecord> {
 	}
 
 	override fun iterator(): Iterator<AbsLogRecord> {
-		return AbsLogRecordIterator()
+		return AbsLogRecordIterator(justDB)
 	}
 }

@@ -8,7 +8,7 @@ import core.SystemService
 interface LogManager : SystemService, Iterable<LogRecord> {
 	fun flush(recordStored: Int)
 
-	fun append(rec: Array<Any>): Int
+	fun append(rec: List<Any>): Int
 
 	override fun iterator(): Iterator<LogRecord>
 }
