@@ -32,5 +32,7 @@ class LogRecord(private val page: ExPage, private var pos: Int) {
 		return result
 	}
 
-
+	override fun toString(): String {
+		return "LogRecord(page=$page, pos=$pos)"
+	}
 }

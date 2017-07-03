@@ -143,9 +143,7 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 			return INT_SIZE
 	}
 
-	private fun currentBlockNumber(): Int {
-		return currentBlock.blockNumber
-	}
+	private fun currentBlockNumber() = currentBlock.blockNumber
 
 	@Synchronized
 	override operator fun iterator(): Iterator<LogRecord> {
