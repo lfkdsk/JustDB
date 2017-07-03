@@ -30,8 +30,8 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 
 		// delete temp files
 		dataBaseDir.list()
-				.filter { it.startsWith("just-temp") }
-				.forEach { File(dataBaseDir, it).delete() }
+				.filter { file -> file.startsWith("just-temp") }
+				.forEach { file -> File(dataBaseDir, file).delete() }
 	}
 
 	constructor(databaseName: String)
