@@ -14,16 +14,19 @@ class LogManagerImplTest : GroovyTestCase() {
 	val manager = justDB.LogManager()
 
 	fun testAppend() {
-//		for (i in 0..10) {
-		val list = mutableListOf<String>()
 		repeat(10) {
-			list.add("000 message")
+			val list = mutableListOf<String>()
+			repeat(10) {
+				list.add("000 message")
+			}
+			manager.append(list)
+			manager.flush(10)
 		}
-		manager.append(list)
-		manager.flush(10)
 
 		for (record: LogRecord in manager) {
-			println("=====> ${record.nextString()}")
+			repeat(10) {
+				println("=====> ${record.nextString()}")
+			}
 		}
 	}
 

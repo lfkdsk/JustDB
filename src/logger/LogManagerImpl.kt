@@ -159,7 +159,7 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		init {
 			page.read(currentBlock)
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
-			println("currentRecord $currentRecord")
+			println("init currentRecord $currentRecord")
 		}
 
 		override operator fun next(): LogRecord {
@@ -179,8 +179,10 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		 */
 		private fun moveToNextBlock() {
 			currentBlock = Block(currentBlock.fileName, currentBlock.blockNumber - 1)
+			println("check to next block ${currentBlock.fileName} : ${currentBlock.blockNumber} ")
 			page.read(currentBlock)
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
+			println("current record $currentRecord")
 		}
 	}
 }
