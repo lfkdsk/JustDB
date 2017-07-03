@@ -8,7 +8,7 @@ import java.util.*
  */
 class ConcurrencyManager {
 
-	val lockTable: LockTable = LockTable
+	val lockTable: LockTable = LockTable()
 	private val locks = HashMap<Block, String>()
 
 	/**
@@ -19,6 +19,7 @@ class ConcurrencyManager {
 		if (locks[blk] == null) {
 			lockTable.readLock(blk)
 			locks.put(blk, "S")
+			println("add read lock to $blk")
 		}
 	}
 
@@ -33,6 +34,7 @@ class ConcurrencyManager {
 			readLock(blk)
 			lockTable.writeLock(blk)
 			locks.put(blk, "X")
+			println("add write lock to $blk")
 		}
 	}
 

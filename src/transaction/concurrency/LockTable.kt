@@ -10,7 +10,7 @@ import storage.Block
 
 class LockAbortException : RuntimeException()
 
-object LockTable {
+class LockTable {
 	private val MAX_TIME: Long = 10000 // 10 seconds
 
 	private val locks: MutableMap<Block, Int> = HashMap()

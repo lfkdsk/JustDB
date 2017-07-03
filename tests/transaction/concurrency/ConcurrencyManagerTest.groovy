@@ -14,13 +14,18 @@ class ConcurrencyManagerTest extends GroovyTestCase {
 
     void testReadLock() {
         ConcurrencyManager manager = new ConcurrencyManager()
-        manager.readLock(new Block("lfkdsk", 0))
+        Block block = new Block("lfkdsk", 0)
+        manager.readLock(block)
+        manager.readLock(block)
         manager.release()
     }
 
     void testWriteLock() {
         ConcurrencyManager manager = new ConcurrencyManager()
-        manager.writeLock(new Block("lfkdsk", 0))
+        Block block = new Block("lfkdsk", 0)
+        manager.writeLock(block)
+        manager.readLock(block)
+//        manager.writeLock(block)
         manager.release()
     }
 }
