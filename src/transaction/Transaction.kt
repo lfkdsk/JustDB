@@ -10,6 +10,8 @@ import transaction.recovery.RecoveryManager
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
+ * Transaction Object
+ * @param justDB database
  * Created by liufengkai on 2017/5/1.
  */
 class Transaction(val justDB: JustDB) {
@@ -25,7 +27,7 @@ class Transaction(val justDB: JustDB) {
 		/**
 		 * Use CAS to dispatch transaction ID
 		 */
-		fun getNextTransactionNumber(): Int {
+		fun generateTransactionNumber(): Int {
 			while (true) {
 				val value = nextTransactionNumber.get()
 				// ++
@@ -44,7 +46,7 @@ class Transaction(val justDB: JustDB) {
 
 	init {
 		// init transaction number - just use default generate method
-		this.transactionNumber = getNextTransactionNumber()
+		this.transactionNumber = generateTransactionNumber()
 		this.recoveryManager = RecoveryManager(justDB, transactionNumber)
 		this.concurrencyManager = ConcurrencyManager()
 		this.bufferList = BufferList(justDB)

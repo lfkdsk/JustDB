@@ -253,7 +253,6 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		 */
 		private fun moveToNextBlock() {
 			currentBlock = Block(currentBlock.fileName, currentBlock.blockNumber - 1)
-
 //			println("check to next block ${currentBlock.fileName} : ${currentBlock.blockNumber} ")
 
 			page.read(currentBlock)

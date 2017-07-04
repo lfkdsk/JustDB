@@ -12,7 +12,7 @@ class TransactionTest : GroovyTestCase() {
 	fun testGetNextTransactionNumber() {
 //		repeat(100) {
 //			thread {
-//				println("get-next-id ${Transaction.getNextTransactionNumber()}")
+//				println("get-next-id ${Transaction.generateTransactionNumber()}")
 //			}
 //		}
 	}
