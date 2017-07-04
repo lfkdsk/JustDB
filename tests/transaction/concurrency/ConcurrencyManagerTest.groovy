@@ -24,8 +24,17 @@ class ConcurrencyManagerTest extends GroovyTestCase {
         ConcurrencyManager manager = new ConcurrencyManager()
         Block block = new Block("lfkdsk", 0)
         manager.writeLock(block)
-        manager.readLock(block)
-//        manager.writeLock(block)
+
+//        Timer timer = new Timer(false)
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            void run() {
+//                manager.release()
+//            }
+//        }, 5000)
+
+//        manager.readLock(block)
+        manager.writeLock(block)
         manager.release()
     }
 }
