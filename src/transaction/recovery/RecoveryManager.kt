@@ -6,7 +6,6 @@ import core.JustDB
 import core.LogManager
 import storage.Block
 import transaction.record.*
-import java.util.*
 
 /**
  * Recovery Manager
@@ -44,6 +43,7 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 		bufferManager.flushAll(transactionID)
 		val lsn = CommitRecord(justDB, transactionID).writeToLog()
 		loggerManager.flush(lsn)
+
 	}
 
 	/**
@@ -64,28 +64,35 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 			bufferManager.flushAll(transactionID)
 			loggerManager.flush(RollBackRecord(justDB, transactionID).writeToLog())
 		}
+
 	}
 
 	/**
-	 * recover
+	 * recover message
+	 * check all LogType expect { COMMIT | ROLLBACK | CHECKPOINT }
 	 */
 	fun recover() {
-		val finishedTransactions = ArrayList<Int>()
-		this.forEach {
-			when (it.op()) {
+		val finishedTransactions = mutableListOf<Int>()
+		this.forEach { logRecord ->
+			when (logRecord.op()) {
 				LogType.CHECKPOINT -> return
-				LogType.COMMIT -> finishedTransactions.add(it.transactionNumber())
-				LogType.ROLLBACK -> finishedTransactions.add(it.transactionNumber())
+				LogType.COMMIT -> finishedTransactions.add(logRecord.transactionNumber())
+				LogType.ROLLBACK -> finishedTransactions.add(logRecord.transactionNumber())
 				else -> {
-					if (!finishedTransactions.contains(it.transactionNumber())) {
-						it.undo(it.transactionNumber())
+					// undo all non-FLAG transaction non-{ COMMIT | ROLLBACK }
+					// CHECKPOINT => stop
+					// Others => undo all record
+					if (!finishedTransactions.contains(logRecord.transactionNumber())) {
+						logRecord.undo(logRecord.transactionNumber())
 					}
 				}
 			}
 		}.apply {
 			bufferManager.flushAll(transactionID)
+			// add check-point-record record => stop record
 			loggerManager.flush(CheckPointRecord(justDB, transactionID).writeToLog())
 		}
+
 	}
 
 	/**
@@ -124,6 +131,7 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 				return SetStringLogRecord(justDB, transactionID, block, offset, newVal).writeToLog()
 			}
 		}
+
 		return -1
 	}
 
