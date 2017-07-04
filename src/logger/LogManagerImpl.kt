@@ -7,6 +7,7 @@ import storage.ExPage
 import storage.ExPage.DEFAULT.BLOCK_SIZE
 import storage.ExPage.DEFAULT.INT_SIZE
 import storage.ExPage.DEFAULT.strSize
+import utils.logger.Logger
 import utils.standard.If
 
 /**
@@ -109,7 +110,7 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 	private fun finalizeRecord() {
 		page.setInt(currentPos, getLastPos())
 
-		println("pos save to local block $currentBlock \n" +
+		Logger.d("pos save to local block $currentBlock \n" +
 				"write to file | ${getLastPos()} | at position $currentPos")
 
 		setLastRecordPos(currentPos)
@@ -122,7 +123,7 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		else if (value is Int)
 			page.setInt(currentPos, value)
 
-		println("isString: ${value is String} \n" +
+		Logger.d("isString: ${value is String} \n" +
 				"isInt: ${value is Int}  \n" +
 				"val save to local block $currentBlock \n" +
 				"write to file | $value | at position $currentPos")

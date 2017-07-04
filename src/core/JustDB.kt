@@ -4,6 +4,7 @@ import buffer.BufferManagerImpl
 import logger.LogManagerImpl
 import metadata.MetadataManagerImpl
 import storage.FileManagerImpl
+import utils.logger.Logger
 
 /**
  * Created by liufengkai on 2017/4/30.
@@ -27,6 +28,7 @@ class JustDB(val dataBaseName: String = "just-db",
 			mutableMapOf()
 
 	init {
+		Logger.init(dataBaseName)
 		/**
 		 * load path: file -> metadata -> logger -> buffer
 		 */
