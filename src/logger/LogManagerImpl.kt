@@ -137,11 +137,16 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		currentPos += INT_SIZE
 	}
 
+	/**
+	 * append real value | handle different type value
+	 * @see ExPage value type
+	 */
 	private fun appendVal(value: Any) {
-		if (value is String)
-			page.setString(currentPos, value)
-		else if (value is Int)
-			page.setInt(currentPos, value)
+		// more value type
+		when (value) {
+			is String -> page.setString(currentPos, value)
+			is Int -> page.setInt(currentPos, value)
+		}
 
 		Logger.d("isString: ${value is String} \n" +
 				"isInt: ${value is Int}  \n" +
@@ -190,14 +195,14 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		init {
 			page.read(currentBlock)
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
-			println("init currentRecord $currentRecord")
+//			println("init currentRecord $currentRecord")
 		}
 
 		override operator fun next(): LogRecord {
 			if (currentRecord == 0)
 				moveToNextBlock()
 			currentRecord = page.getInt(currentRecord)
-			println("currentRecord $currentRecord")
+//			println("currentRecord $currentRecord")
 			return LogRecord(page, currentRecord + INT_SIZE)
 		}
 
@@ -210,10 +215,10 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		 */
 		private fun moveToNextBlock() {
 			currentBlock = Block(currentBlock.fileName, currentBlock.blockNumber - 1)
-			println("check to next block ${currentBlock.fileName} : ${currentBlock.blockNumber} ")
+//			println("check to next block ${currentBlock.fileName} : ${currentBlock.blockNumber} ")
 			page.read(currentBlock)
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
-			println("current record $currentRecord")
+//			println("current record $currentRecord")
 		}
 	}
 }
