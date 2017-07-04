@@ -24,7 +24,7 @@ class SetIntLogRecord(val justDB: JustDB,
 			logRecord.nextInt())
 
 	override fun writeToLog(): Int {
-		val rec = listOf(LogType.SETINT, transaction, block.fileName, block.blockNumber, offset, value)
+		val rec = listOf(LogType.SETINT.value, transaction, block.fileName, block.blockNumber, offset, value)
 		return logManager.append(rec)
 	}
 

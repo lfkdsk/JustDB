@@ -108,6 +108,10 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 
 	private fun finalizeRecord() {
 		page.setInt(currentPos, getLastPos())
+
+		println("pos save to local block $currentBlock \n" +
+				"write to file | ${getLastPos()} | at position $currentPos")
+
 		setLastRecordPos(currentPos)
 		currentPos += INT_SIZE
 	}
@@ -117,6 +121,12 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 			page.setString(currentPos, value)
 		else if (value is Int)
 			page.setInt(currentPos, value)
+
+		println("isString: ${value is String} \n" +
+				"isInt: ${value is Int}  \n" +
+				"val save to local block $currentBlock \n" +
+				"write to file | $value | at position $currentPos")
+
 		currentPos += sizeOfObject(value)
 	}
 

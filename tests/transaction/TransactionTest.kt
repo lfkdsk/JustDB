@@ -9,7 +9,7 @@ import storage.Block
  */
 class TransactionTest : GroovyTestCase() {
 
-	fun testGetNextTranscationNumber() {
+	fun testGetNextTransactionNumber() {
 //		repeat(100) {
 //			thread {
 //				println("get-next-id ${Transaction.getNextTransactionNumber()}")
@@ -20,14 +20,17 @@ class TransactionTest : GroovyTestCase() {
 	fun testTransaction() {
 		val justDB = JustDB()
 		val transaction = Transaction(justDB)
+
 		val block = Block("transaction-test", 0)
 		transaction.pin(block)
 		transaction.setString(block, 0, "lfkdsk lfkdsk")
 		transaction.commit()
-		transaction.pin(block)
 
-		transaction.setString(block, 0, "lfkdsk ssss")
-		transaction.commit()
-		transaction.rollback()
+//		val transaction1 = Transaction(justDB)
+//		transaction1.pin(block)
+//		transaction1.setString(block, 0, "lfkdsk ssss")
+//		transaction1.rollback()
+//		transaction1.commit()
+//		transaction1.rollback()
 	}
 }

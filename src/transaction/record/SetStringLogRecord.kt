@@ -23,7 +23,7 @@ class SetStringLogRecord(val justDB: JustDB,
 
 
 	override fun writeToLog(): Int {
-		val rec = listOf(LogType.SETSTRING, transaction, block.fileName, block.blockNumber, offset, value)
+		val rec = listOf(LogType.SETSTRING.value, transaction, block.fileName, block.blockNumber, offset, value)
 		return logManager.append(rec)
 	}
 

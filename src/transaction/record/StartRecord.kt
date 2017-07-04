@@ -13,7 +13,7 @@ class StartRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {
 			: this(justDB, logRecord.nextInt())
 
 	override fun writeToLog(): Int {
-		val rec = listOf(LogType.START, transaction)
+		val rec = listOf(LogType.START.value, transaction)
 		return logManager.append(rec)
 	}
 

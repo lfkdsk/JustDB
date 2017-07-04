@@ -13,7 +13,7 @@ class CheckPointRecord(justDB: JustDB) : AbsLogRecord(justDB) {
 	constructor(justDB: JustDB, transaction: Int) : this(justDB)
 
 	override fun writeToLog(): Int {
-		val rec = listOf<Any>(LogType.CHECKPOINT)
+		val rec = listOf<Any>(LogType.CHECKPOINT.value)
 		return logManager.append(rec)
 	}
 

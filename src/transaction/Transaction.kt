@@ -65,7 +65,7 @@ class Transaction(val justDB: JustDB) {
 	}
 
 	fun recover() {
-		justDB.BufferManager().flushAll(transactionNumber.toInt())
+		justDB.BufferManager().flushAll(transactionNumber)
 		recoveryManager.recover()
 	}
 
