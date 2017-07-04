@@ -4,10 +4,13 @@ import core.JustDB
 import logger.LogRecord
 
 /**
+ * Creates a new start log record for the specified transaction.
  * Created by liufengkai on 2017/5/1.
  */
 class StartRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {
-	constructor(justDB: JustDB, logRecord: LogRecord) : this(justDB, logRecord.nextInt())
+
+	constructor(justDB: JustDB, logRecord: LogRecord)
+			: this(justDB, logRecord.nextInt())
 
 	override fun writeToLog(): Int {
 		val rec = listOf(LogType.START, transaction)
@@ -23,7 +26,7 @@ class StartRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {
 	}
 
 	override fun undo(transaction: Int) {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
 	}
 
 	override fun toString(): String {

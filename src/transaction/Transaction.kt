@@ -37,7 +37,7 @@ class Transaction(val justDB: JustDB) {
 		}
 	}
 
-	private val transactionNumber: Int
+	val transactionNumber: Int
 	private val recoveryManager: RecoveryManager
 	private val concurrencyManager: ConcurrencyManager
 	private val bufferList: BufferList

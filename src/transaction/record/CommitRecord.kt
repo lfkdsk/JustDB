@@ -26,6 +26,6 @@ class CommitRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) 
 	override fun undo(transaction: Int) {}
 
 	override fun toString(): String {
-		return "CommitRecord(transactionID=$transaction)"
+		return "<CommitRecord(transactionID=$transaction)>"
 	}
 }

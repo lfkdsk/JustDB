@@ -18,7 +18,7 @@ class Buffer(justDB: JustDB) {
 	 * modify by write event
 	 */
 	private var logSequenceNumber = -1
-	private val logManager by lazyOf(justDB.LogManager())
+	private val logManager = justDB.LogManager()
 
 	fun getInt(offset: Int): Int {
 		return contents.getInt(offset)

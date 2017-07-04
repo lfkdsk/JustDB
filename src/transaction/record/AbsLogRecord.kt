@@ -5,6 +5,7 @@ import core.LogManager
 import logger.LogManager
 
 /**
+ * Log Type
  * Created by liufengkai on 2017/5/1.
  */
 enum class LogType(val value: Int) {

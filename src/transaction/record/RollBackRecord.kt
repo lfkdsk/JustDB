@@ -26,7 +26,7 @@ class RollBackRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB
 	override fun undo(transaction: Int) {}
 
 	override fun toString(): String {
-		return "RollBackRecord(transactionID=$transaction)"
+		return "<RollBackRecord(transactionID=$transaction)>"
 	}
 
 }

@@ -28,6 +28,6 @@ class CheckPointRecord(justDB: JustDB) : AbsLogRecord(justDB) {
 	override fun undo(transaction: Int) {}
 
 	override fun toString(): String {
-		return "CheckPointRecord()"
+		return "<CheckPointRecord>"
 	}
 }

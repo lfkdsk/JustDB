@@ -13,7 +13,8 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 
 	private val lock = Object()
 
-	override fun pin(block: Block): Buffer = synchronized(lock) {
+	override
+	fun pin(block: Block): Buffer = synchronized(lock) {
 		try {
 			val timestamp = System.currentTimeMillis()
 			var buff = simpleBufferManager.pin(block)

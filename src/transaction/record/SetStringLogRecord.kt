@@ -45,7 +45,7 @@ class SetStringLogRecord(val justDB: JustDB,
 	}
 
 	override fun toString(): String {
-		return "SetStringLogRecord(transactionID=$transaction, block=$block, offset=$offset, value='$value')"
+		return "<SetStringLogRecord(transactionID=$transaction, block=$block, offset=$offset, value='$value')>"
 	}
 
 }
