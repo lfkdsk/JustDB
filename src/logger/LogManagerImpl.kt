@@ -179,30 +179,68 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 			return INT_SIZE
 	}
 
+	/**
+	 * get current-block number
+	 */
 	private fun currentBlockNumber() = currentBlock.blockNumber
 
 	@Synchronized
 	override operator fun iterator(): Iterator<LogRecord> {
+		// before read iterator - flush all msg
 		flush()
 		return LogIterator(justDB, currentBlock)
 	}
 
+
+//	1
+//								 3
+//	+
+//	|                       +--------------------+
+//	|                       |                    |
+//	| get-last      2       v                    |  read-pos
+//	|      ^----------------+--------------------+
+//	|      |                    4                |
+//	v      +                ^-------+            v
+//	|      |                |       ^
+//	+----------+---------------------------------+-------+------------------------+
+//	|          |            |       |            |       |                        |
+//	| LAST_POS | log-record | pos-0 | log-record | pos-1 |                        |
+//	|          |     0      |       |     1      |       |                        |
+//	+----------+------------+-------+------------+-------+------------------------+
+//
+//	Log-Iterator read log-msg
+//
+	/**
+	 * use log-iterator to read log-record
+	 * @see transaction.record.AbsLogRecordIterator read-log with different type
+	 * @sample logger.LogManagerImplTest used in logManagerImplTest
+	 *
+	 * @param justDB database
+	 * @param currentBlock block
+	 */
 	class LogIterator(justDB: JustDB, var currentBlock: Block) : Iterator<LogRecord> {
+		/**
+		 * open page
+		 */
 		private val page = ExPage(justDB)
 
 		private var currentRecord: Int
 
 		init {
+			// read to page(contents)
 			page.read(currentBlock)
+			// first read LAST_POS
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
 //			println("init currentRecord $currentRecord")
 		}
 
 		override operator fun next(): LogRecord {
+			// move to new block
 			if (currentRecord == 0)
 				moveToNextBlock()
 			currentRecord = page.getInt(currentRecord)
-//			println("currentRecord $currentRecord")
+
+			// update current-record-pointer and return log-record
 			return LogRecord(page, currentRecord + INT_SIZE)
 		}
 
@@ -215,8 +253,11 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		 */
 		private fun moveToNextBlock() {
 			currentBlock = Block(currentBlock.fileName, currentBlock.blockNumber - 1)
+
 //			println("check to next block ${currentBlock.fileName} : ${currentBlock.blockNumber} ")
+
 			page.read(currentBlock)
+			// re-read LAST_POS
 			currentRecord = page.getInt(LogManagerImpl.LAST_POS)
 //			println("current record $currentRecord")
 		}
