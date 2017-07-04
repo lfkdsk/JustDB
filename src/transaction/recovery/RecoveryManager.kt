@@ -28,11 +28,11 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 
 	fun rollback() {
 		// do rollback
-		this.filter { it.transactionNumber() == transactionID }
-				.forEach {
-					if (it.op() == LogType.START)
+		this.filter { logRecord -> logRecord.transactionNumber() == transactionID }
+				.forEach { logRecord ->
+					if (logRecord.op() == LogType.START)
 						return
-					it.undo(transactionID)
+					logRecord.undo(transactionID)
 				}
 		// ----
 		bufferManager.flushAll(transactionID)
@@ -52,10 +52,10 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 					}
 				}
 			}
+		}.apply {
+			bufferManager.flushAll(transactionID)
+			loggerManager.flush(CheckPointRecord(justDB, transactionID).writeToLog())
 		}
-		// ----
-		bufferManager.flushAll(transactionID)
-		loggerManager.flush(CheckPointRecord(justDB, transactionID).writeToLog())
 	}
 
 	fun setInt(buff: Buffer, offset: Int, newval: Int): Int {
@@ -84,11 +84,7 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 		return -1
 	}
 
-	private fun isTempBlock(blk: Block): Boolean {
-		return blk.fileName.startsWith("just-temp")
-	}
+	private fun isTempBlock(blk: Block): Boolean = blk.fileName.startsWith("just-temp")
 
-	override fun iterator(): Iterator<AbsLogRecord> {
-		return AbsLogRecordIterator(justDB)
-	}
+	override fun iterator(): Iterator<AbsLogRecord> = AbsLogRecordIterator(justDB)
 }

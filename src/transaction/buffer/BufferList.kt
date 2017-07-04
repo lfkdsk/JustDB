@@ -17,7 +17,7 @@ class BufferList(justDB: JustDB) {
 	private val bufferManager = justDB.BufferManager()
 
 	fun getBuffer(blk: Block): Buffer = buffers[blk]
-			?: throw IllegalAccessException("index of buffer list out of range")
+			?: throw IllegalAccessException("index of buffer list out of range $blk")
 
 	fun pin(block: Block) {
 		val buffer = bufferManager.pin(block)

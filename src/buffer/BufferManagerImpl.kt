@@ -13,7 +13,7 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 
 	private val lock = Object()
 
-	override fun pin(block: Block): Buffer {
+	override fun pin(block: Block): Buffer = synchronized(lock) {
 		try {
 			val timestamp = System.currentTimeMillis()
 			var buff = simpleBufferManager.pin(block)
@@ -31,8 +31,8 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 		}
 	}
 
-	@Synchronized override
-	fun pinNew(fileName: String, pageFormatter: PageFormatter): Buffer {
+	override
+	fun pinNew(fileName: String, pageFormatter: PageFormatter): Buffer = synchronized(lock) {
 		try {
 			val timestamp = System.currentTimeMillis()
 			var buff = simpleBufferManager.pinNew(fileName, pageFormatter)
@@ -48,7 +48,8 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 		}
 	}
 
-	override fun unpin(buffer: Buffer) {
+
+	override fun unpin(buffer: Buffer) = synchronized(lock) {
 		simpleBufferManager.unpin(buffer)
 		if (!buffer.isPinned())
 			lock.notifyAll()
