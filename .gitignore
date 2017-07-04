@@ -1,5 +1,7 @@
 # idea folder
-./idea
+idea
+.idea
+lib
 
 # Compiled Object files
 *.slo
@@ -62,4 +64,3 @@ gen### Java template
 hs_err_pid*
 
 .idea/
-/tests/sql/parser/SqlParserTest.groovy
