@@ -4,15 +4,27 @@ import core.JustDB
 import storage.Block
 
 /**
+ * Buffer-Manager Imple
  * Created by liufengkai on 2017/4/30.
  */
 class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
+	/**
+	 * max-wait-time
+	 */
 	private val MAX_TIME: Long = 10000 // 10 seconds
 
 	private val simpleBufferManager = SimpleBufferManagerImpl(justDB, bufferNumber)
 
-	private val lock = Object()
+	/**
+	 * sync - lock - object
+	 */
+	private val lock = java.lang.Object()
 
+	/**
+	 * Buffer pin block
+	 * @param block => block
+	 */
+	@Throws(BufferAbortException::class)
 	override
 	fun pin(block: Block): Buffer = synchronized(lock) {
 		try {
@@ -32,40 +44,54 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 		}
 	}
 
+	/**
+	 * Pin new fileName Block
+	 * @param fileName
+	 * @param pageFormatter
+	 */
+	@Throws(BufferAbortException::class)
 	override
 	fun pinNew(fileName: String, pageFormatter: PageFormatter): Buffer = synchronized(lock) {
 		try {
 			val timestamp = System.currentTimeMillis()
 			var buff = simpleBufferManager.pinNew(fileName, pageFormatter)
+
 			while (buff == null && !waitingTooLong(timestamp)) {
 				lock.wait(MAX_TIME)
 				buff = simpleBufferManager.pinNew(fileName, pageFormatter)
 			}
+
 			if (buff == null)
 				throw BufferAbortException()
+
 			return buff
 		} catch (e: InterruptedException) {
 			throw BufferAbortException()
 		}
 	}
 
-
-	override fun unpin(buffer: Buffer) = synchronized(lock) {
+	/**
+	 * unpin buffer from block
+	 * @param buffer this buffer
+	 */
+	override
+	fun unpin(buffer: Buffer) = synchronized(lock) {
 		simpleBufferManager.unpin(buffer)
+		// unpin all -> lock
 		if (!buffer.isPinned())
 			lock.notifyAll()
 	}
 
-	override fun flushAll(transaction: Int) {
+	override
+	fun flushAll(transaction: Int) {
 		simpleBufferManager.flushAll(transaction)
 	}
 
-	override fun available(): Int {
+	override
+	fun available(): Int {
 		return simpleBufferManager.available()
 	}
 
-	private fun waitingTooLong(startTime: Long): Boolean {
-		return System.currentTimeMillis() - startTime > MAX_TIME
-	}
+	private fun waitingTooLong(startTime: Long) = System.currentTimeMillis() - startTime > MAX_TIME
 }
 
