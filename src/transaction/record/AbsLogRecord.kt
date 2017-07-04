@@ -52,6 +52,10 @@ abstract class AbsLogRecord(justDB: JustDB) {
 }
 
 class AbsLogRecordIterator(val justDB: JustDB) : Iterator<AbsLogRecord> {
+	/**
+	 * logManager-Iterator
+	 * use log-manager-iterator to read log-record
+	 */
 	private val iterator = (justDB.LogManager()).iterator()
 
 	override fun hasNext(): Boolean {
@@ -59,8 +63,11 @@ class AbsLogRecordIterator(val justDB: JustDB) : Iterator<AbsLogRecord> {
 	}
 
 	override fun next(): AbsLogRecord {
+		// read-record
 		val rec = iterator.next()
+		// read-op
 		val op = rec.nextInt()
+		// use log-type to handle log-record
 		when (op) {
 			LogType.CHECKPOINT.value -> return CheckPointRecord(justDB, rec)
 			LogType.START.value -> return StartRecord(justDB, rec)
