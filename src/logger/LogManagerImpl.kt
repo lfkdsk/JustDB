@@ -11,21 +11,31 @@ import utils.logger.Logger
 import utils.standard.If
 
 /**
+ * Logger Manager
+ * | LAST_POS | Record |
+ * @see JustDB/art/logger-file-structure.png to get more message about logger-structure
  * Created by liufengkai on 2017/4/30.
  */
 class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileName) : LogManager {
 
+	/**
+	 * current page
+	 */
 	private val page = ExPage(justDB)
 
+	/**
+	 * current position
+	 */
 	private var currentPos = 0
 
+	/**
+	 * current block
+	 */
 	private var currentBlock: Block =
 			justDB.FileManager()
 					.blockNumber(logFile) // get block size
 					.If({ logFileSize -> logFileSize == 0 }, {
-						/**
-						 * initial logFile
-						 */
+						// init log file
 						// save last record position
 						setLastRecordPos(0)
 						// reset pos
@@ -59,16 +69,20 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 //	}
 
 	companion object {
-		// last record pos
+		// last record pos | position wont change
 		var LAST_POS = 0
 	}
 
+	/**
+	 * We save lastPosition-Pointer in first 4 byte(called LAST_POS)
+	 * Every Element be saved into loggerFile LAST_POS will be updated
+	 */
 	private fun getLastPos(): Int {
 		return page.getInt(LAST_POS)
 	}
 
 	/**
-	 * set LAST_POS in log file in postion
+	 * set LAST_POS in log file in position
 	 * @param pos in logfile
 	 */
 	private fun setLastRecordPos(pos: Int) {
@@ -92,6 +106,12 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 		page.write(currentBlock)
 	}
 
+	/**
+	 * append structure message to LoggerFile
+	 * @see transaction.record Support some Record method to save Logger
+	 * { RecordType , otherMessage }
+	 * @see transaction.recovery.RecoveryManager Use RecoveryManager to control Logger
+	 */
 	@Synchronized
 	override fun append(rec: List<Any>): Int {
 		// 4 bytes for the integer that points to the previous log record
