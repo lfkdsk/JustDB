@@ -58,27 +58,27 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 		}
 	}
 
-	fun setInt(buff: Buffer, offset: Int, newval: Int): Int {
-		val oldVal = buff.getInt(offset)
+	fun setInt(buff: Buffer, offset: Int, newVal: Int): Int {
+//		val oldVal = buff.getInt(offset)
 		val blk = buff.block()
 		blk?.let {
 			if (isTempBlock(blk)) {
 				return -1
 			} else {
-				return SetIntLogRecord(justDB, transactionID, blk, offset, oldVal).writeToLog()
+				return SetIntLogRecord(justDB, transactionID, blk, offset, newVal).writeToLog()
 			}
 		}
 		return -1
 	}
 
-	fun setString(buff: Buffer, offset: Int, newval: String): Int {
-		val oldVal = buff.getString(offset)
+	fun setString(buff: Buffer, offset: Int, newVal: String): Int {
+//		val oldVal = buff.getString(offset)
 		val blk = buff.block()
 		blk?.let {
 			if (isTempBlock(blk)) {
 				return -1
 			} else {
-				return SetStringLogRecord(justDB, transactionID, blk, offset, oldVal).writeToLog()
+				return SetStringLogRecord(justDB, transactionID, blk, offset, newVal).writeToLog()
 			}
 		}
 		return -1
