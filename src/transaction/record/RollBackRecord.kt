@@ -4,6 +4,7 @@ import core.JustDB
 import logger.LogRecord
 
 /**
+ * RollBack Record | JUST FLAG
  * Created by liufengkai on 2017/5/1.
  */
 class RollBackRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {

@@ -6,6 +6,7 @@ import logger.LogRecord
 import storage.Block
 
 /**
+ * write int => generateIntLogRecord
  * Created by liufengkai on 2017/5/1.
  */
 class SetIntLogRecord(val justDB: JustDB,
@@ -36,12 +37,17 @@ class SetIntLogRecord(val justDB: JustDB,
 		return transaction
 	}
 
+	/**
+	 * undo transaction => write int
+	 * @param transaction transaction ID
+	 */
 	override fun undo(transaction: Int) {
 		val bufferManager = justDB.BufferManager()
-		val buff = bufferManager.pin(block)
-		buff?.let {
-			buff.setInt(offset, value, transaction, -1)
-			bufferManager.unpin(it)
+		// pin block to buffer
+		val buffer = bufferManager.pin(block)
+		buffer?.let { block ->
+			buffer.setInt(offset, value, transaction, -1)
+			bufferManager.unpin(block)
 		}
 	}
 

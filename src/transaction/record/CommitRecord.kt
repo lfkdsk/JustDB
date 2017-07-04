@@ -4,6 +4,7 @@ import core.JustDB
 import logger.LogRecord
 
 /**
+ * CommitRecord | JUST FLAG
  * Created by liufengkai on 2017/5/1.
  */
 class CommitRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {

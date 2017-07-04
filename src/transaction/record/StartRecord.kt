@@ -5,6 +5,7 @@ import logger.LogRecord
 
 /**
  * Creates a new start log record for the specified transaction.
+ * | JUST FLAG
  * Created by liufengkai on 2017/5/1.
  */
 class StartRecord(justDB: JustDB, val transaction: Int) : AbsLogRecord(justDB) {
