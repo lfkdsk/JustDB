@@ -39,7 +39,9 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 //	constructor(databaseName: String)
 //			: this(databaseName, System.getProperty("user.home"))
 
-	override fun read(block: Block, byteBuffer: ByteBuffer) {
+	@Throws(RuntimeException::class)
+	override
+	fun read(block: Block, byteBuffer: ByteBuffer) {
 		try {
 			byteBuffer.clear()
 			val fileChannel: FileChannel = getFile(block.fileName)
@@ -49,6 +51,7 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 		}
 	}
 
+	@Throws(RuntimeException::class)
 	@Synchronized override
 	fun write(block: Block, byteBuffer: ByteBuffer) {
 		try {
@@ -60,6 +63,11 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 		}
 	}
 
+	/**
+	 * append new block to file
+	 * @param filename spec file name
+	 * @param byteBuffer use ByteBuffer
+	 */
 	@Synchronized override
 	fun append(filename: String, byteBuffer: ByteBuffer): Block {
 		val newBlockNumber = blockNumber(filename)
@@ -68,11 +76,15 @@ class FileManagerImpl(databaseName: String, homeDir: String)
 		return blk
 	}
 
+	/**
+	 * generate new block => block number
+	 */
+	@Throws(RuntimeException::class)
 	@Synchronized override
 	fun blockNumber(filename: String): Int {
 		try {
-			val fc = getFile(filename)
-			return (fc.size() / BLOCK_SIZE).toInt()
+			val fileChannel = getFile(filename)
+			return (fileChannel.size() / BLOCK_SIZE).toInt()
 		} catch (e: IOException) {
 			throw RuntimeException("cannot access " + filename)
 		}
