@@ -15,7 +15,10 @@ class Block(val fileName: String, var blockNumber: Int) {
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true
 		if (other?.javaClass != javaClass) return false
-		other as Block
+		return equals(other as Block)
+	}
+
+	fun equals(other: Block): Boolean {
 		if (fileName != other.fileName) return false
 		if (blockNumber != other.blockNumber) return false
 		return true
