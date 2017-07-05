@@ -122,13 +122,16 @@ class Buffer(justDB: JustDB) {
 	internal fun isModifiedBy(transaction: Int): Boolean = transaction == modifiedBy
 
 	/**
-	 * format contents object => save to local filename
+	 * format contents object => save to local file
 	 * @param filename spec file-name
 	 * @param pageFormatter page-formatter
 	 */
 	internal fun assignToNew(filename: String, pageFormatter: PageFormatter) {
+		// flush => save
 		flush()
+		// format message
 		pageFormatter.format(contents)
+		// return new block
 		block = contents.append(filename)
 		pins = 0
 	}

@@ -99,16 +99,17 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 	 * write int to file
 	 * @param buffer
 	 * @param offset to current-pointer
-	 * @param newVal new int value
+	 * @param newVal new int value - useless (recovery need save old value)
+	 * @return LSN - LSN message
 	 */
 	fun setInt(buffer: Buffer, offset: Int, newVal: Int): Int {
-//		val oldVal = buffer.getInt(offset)
+		val oldVal = buffer.getInt(offset)
 		val block = buffer.block()
 		block?.let {
 			if (isTempBlock(block)) {
 				return -1
 			} else {
-				return SetIntLogRecord(justDB, transactionID, block, offset, newVal).writeToLog()
+				return SetIntLogRecord(justDB, transactionID, block, offset, oldVal).writeToLog()
 			}
 		}
 
@@ -119,16 +120,17 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 	 * write string to file
 	 * @param buffer
 	 * @param offset offset to current-pointer
-	 * @param newVal new String value
+	 * @param newVal new String value - useless (recovery need save old value)
+	 * @return LSN - LSN message
 	 */
 	fun setString(buffer: Buffer, offset: Int, newVal: String): Int {
-//		val oldVal = buffer.getString(offset)
+		val oldVal = buffer.getString(offset)
 		val block = buffer.block()
 		block?.let {
 			if (isTempBlock(block)) {
 				return -1
 			} else {
-				return SetStringLogRecord(justDB, transactionID, block, offset, newVal).writeToLog()
+				return SetStringLogRecord(justDB, transactionID, block, offset, oldVal).writeToLog()
 			}
 		}
 

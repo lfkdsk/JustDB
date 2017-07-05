@@ -50,7 +50,7 @@ class LockTable {
 
 		// add lock
 		locks.put(block, -1)
-		println("blomeck $block startTime: $timeStamp get write lock")
+		println("block $block startTime: $timeStamp get write lock")
 	}
 
 	/**
@@ -62,7 +62,7 @@ class LockTable {
 		val timeStamp = System.currentTimeMillis()
 		// if don't have write lock , can add read lock to it
 		while (hasWriteLock(block) && !waitingTooLong(timeStamp)) {
-			println("blomeck $block startTime: $timeStamp wait read lock")
+			println("block $block startTime: $timeStamp wait read lock")
 
 			lockObject.wait(MAX_TIME)
 		}
@@ -72,7 +72,7 @@ class LockTable {
 
 		locks.put(block, this[block] + 1)
 
-		println("blomeck $block startTime: $timeStamp get read lock")
+		println("block $block startTime: $timeStamp get read lock")
 	}
 
 	/**

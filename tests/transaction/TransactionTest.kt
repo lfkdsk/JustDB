@@ -3,6 +3,7 @@ package transaction
 import core.JustDB
 import groovy.util.GroovyTestCase
 import storage.Block
+import kotlin.concurrent.thread
 
 /**
  * Created by liufengkai on 2017/7/4.
@@ -10,11 +11,11 @@ import storage.Block
 class TransactionTest : GroovyTestCase() {
 
 	fun testGetNextTransactionNumber() {
-//		repeat(100) {
-//			thread {
-//				println("get-next-id ${Transaction.generateTransactionNumber()}")
-//			}
-//		}
+		repeat(100) {
+			thread {
+				println("get-next-id ${Transaction.generateTransactionNumber()}")
+			}
+		}
 	}
 
 	fun testTransaction() {

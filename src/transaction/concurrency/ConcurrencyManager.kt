@@ -49,6 +49,9 @@ class ConcurrencyManager {
 		}
 	}
 
+	/**
+	 * release all block
+	 */
 	fun release() {
 		for (block in locks.keys)
 			lockTable.unlock(block)

@@ -65,19 +65,21 @@ class BufferPoolManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	fun unpin(buffer: Buffer) {
 		buffer.unpin()
 		if (!buffer.isPinned())
-			numAvailable++
+			numAvailable.inc()
 	}
 
 	/**
-	 * pin new
+	 * pin new —— get new block =>
 	 */
 	@Synchronized override
 	fun pinNew(fileName: String, pageFormatter: PageFormatter): Buffer? {
-		val buff = chooseUnPinnedBuffer() ?: return null
-		buff.assignToNew(fileName, pageFormatter)
-		numAvailable--
-		buff.pin()
-		return buff
+		// get-buffer
+		val buffer = chooseUnPinnedBuffer() ?: return null
+		// assign to new
+		buffer.assignToNew(fileName, pageFormatter)
+		numAvailable.inv()
+		buffer.pin()
+		return buffer
 	}
 
 	/**

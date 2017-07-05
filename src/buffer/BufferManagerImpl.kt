@@ -13,7 +13,7 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	 */
 	private val MAX_TIME: Long = 10000 // 10 seconds
 
-	private val simpleBufferManager = BufferPoolManagerImpl(justDB, bufferNumber)
+	private val bufferPoolManager = BufferPoolManagerImpl(justDB, bufferNumber)
 
 	/**
 	 * sync - lock - object
@@ -29,11 +29,11 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	fun pin(block: Block): Buffer = synchronized(lock) {
 		try {
 			val timestamp = System.currentTimeMillis()
-			var buff = simpleBufferManager.pin(block)
+			var buff = bufferPoolManager.pin(block)
 
 			while (buff == null && !waitingTooLong(timestamp)) {
 				lock.wait(MAX_TIME)
-				buff = simpleBufferManager.pin(block)
+				buff = bufferPoolManager.pin(block)
 			}
 
 			if (buff == null)
@@ -54,11 +54,12 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	fun pinNew(fileName: String, pageFormatter: PageFormatter): Buffer = synchronized(lock) {
 		try {
 			val timestamp = System.currentTimeMillis()
-			var buff = simpleBufferManager.pinNew(fileName, pageFormatter)
+			var buff = bufferPoolManager.pinNew(fileName, pageFormatter)
 
 			while (buff == null && !waitingTooLong(timestamp)) {
 				lock.wait(MAX_TIME)
-				buff = simpleBufferManager.pinNew(fileName, pageFormatter)
+				// get new block
+				buff = bufferPoolManager.pinNew(fileName, pageFormatter)
 			}
 
 			if (buff == null)
@@ -76,7 +77,7 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	 */
 	override
 	fun unpin(buffer: Buffer) = synchronized(lock) {
-		simpleBufferManager.unpin(buffer)
+		bufferPoolManager.unpin(buffer)
 		// unpin all -> lock
 		if (!buffer.isPinned())
 			lock.notifyAll()
@@ -84,12 +85,12 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 
 	override
 	fun flushAll(transaction: Int) {
-		simpleBufferManager.flushAll(transaction)
+		bufferPoolManager.flushAll(transaction)
 	}
 
 	override
 	fun available(): Int {
-		return simpleBufferManager.available()
+		return bufferPoolManager.available()
 	}
 
 	private fun waitingTooLong(startTime: Long) = System.currentTimeMillis() - startTime > MAX_TIME
