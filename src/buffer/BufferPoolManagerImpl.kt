@@ -10,12 +10,15 @@ import storage.Block
  * @param bufferNumber buffer-number
  * Created by liufengkai on 2017/4/30.
  */
-class SimpleBufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
+class BufferPoolManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	/**
 	 * initial buffer-pool
 	 */
 	private val bufferPool: Array<Buffer> = Array(bufferNumber, { Buffer(justDB) })
 
+	/**
+	 * available buffer in pool
+	 */
 	private var numAvailable: Int = bufferNumber
 
 	/**
@@ -24,11 +27,11 @@ class SimpleBufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager
 	 */
 	@Synchronized
 	override fun flushAll(transaction: Int) {
-		bufferPool.filter { buffer -> buffer.isModifiedBy(transaction) }
-				.forEach(Buffer::flush)
+		bufferPool.filter { buffer -> buffer.isModifiedBy(transaction) }.forEach(Buffer::flush)
 	}
 
-	override fun available(): Int = numAvailable
+	override
+	fun available(): Int = numAvailable
 
 	/**
 	 * pin block => buffer manager
@@ -54,6 +57,10 @@ class SimpleBufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager
 		return buffer
 	}
 
+	/**
+	 * unpin buffer in pool
+	 * @param buffer pin buffer
+	 */
 	@Synchronized override
 	fun unpin(buffer: Buffer) {
 		buffer.unpin()
@@ -61,6 +68,9 @@ class SimpleBufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager
 			numAvailable++
 	}
 
+	/**
+	 * pin new
+	 */
 	@Synchronized override
 	fun pinNew(fileName: String, pageFormatter: PageFormatter): Buffer? {
 		val buff = chooseUnPinnedBuffer() ?: return null

@@ -4,7 +4,7 @@ import core.JustDB
 import storage.Block
 
 /**
- * Buffer-Manager Imple
+ * Buffer-Manager Impl
  * Created by liufengkai on 2017/4/30.
  */
 class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
@@ -13,7 +13,7 @@ class BufferManagerImpl(justDB: JustDB, bufferNumber: Int) : BufferManager {
 	 */
 	private val MAX_TIME: Long = 10000 // 10 seconds
 
-	private val simpleBufferManager = SimpleBufferManagerImpl(justDB, bufferNumber)
+	private val simpleBufferManager = BufferPoolManagerImpl(justDB, bufferNumber)
 
 	/**
 	 * sync - lock - object
