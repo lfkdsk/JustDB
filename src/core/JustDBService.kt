@@ -17,19 +17,11 @@ object JustDBService {
 	const val METADATA_MANAGER = "METADATA_MANAGER"
 }
 
-fun JustDB.FileManager(): FileManager {
-	return this[JustDBService.FILE_MANAGER] as FileManager
-}
+fun JustDB.FileManager(): FileManager = this[JustDBService.FILE_MANAGER] as FileManager
 
-fun JustDB.LogManager(): LogManager {
-	return this[JustDBService.LOGGER_MANAGER] as LogManager
-}
+fun JustDB.LogManager(): LogManager = this[JustDBService.LOGGER_MANAGER] as LogManager
 
-fun JustDB.BufferManager(): BufferManager {
-	return this[JustDBService.BUFFER_MANAGER] as BufferManager
-}
+fun JustDB.BufferManager(): BufferManager = this[JustDBService.BUFFER_MANAGER] as BufferManager
 
-fun JustDB.MetaDataManager(): MetadataManager {
-	return this[JustDBService.METADATA_MANAGER] as MetadataManager
-}
+fun JustDB.MetaDataManager(): MetadataManager = this[JustDBService.METADATA_MANAGER] as MetadataManager
 

@@ -19,3 +19,4 @@ interface BufferManager : SystemService {
 	
 	fun available(): Int
 }
+

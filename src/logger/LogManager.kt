@@ -12,3 +12,4 @@ interface LogManager : SystemService, Iterable<LogRecord> {
 
 	override fun iterator(): Iterator<LogRecord>
 }
+

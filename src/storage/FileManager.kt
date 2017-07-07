@@ -17,3 +17,4 @@ interface FileManager : SystemService {
 
 	fun append(filename: String, byteBuffer: ByteBuffer): Block
 }
+
