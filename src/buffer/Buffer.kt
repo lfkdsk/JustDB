@@ -7,6 +7,9 @@ import storage.ExPage
 
 /**
  * Buffer - control ExPage
+ * ======
+ * Buffer ===>>> Block
+ * ======
  * @param justDB DataBase
  * Created by liufengkai on 2017/4/30.
  */

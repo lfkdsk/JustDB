@@ -4,6 +4,12 @@ import core.JustDB
 import storage.Block
 
 /**
+ * Buffer Abort
+ * Created by liufengkai on 2017/4/30.
+ */
+class BufferAbortException : RuntimeException()
+
+/**
  * Buffer-Manager Impl
  * Created by liufengkai on 2017/4/30.
  */
