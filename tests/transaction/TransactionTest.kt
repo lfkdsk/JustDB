@@ -32,4 +32,14 @@ class TransactionTest : GroovyTestCase() {
 		transaction1.setString(block, 0, "lfkdsk ssss")
 		transaction1.rollback()
 	}
+
+	fun testTransactionPinNew() {
+//		val justDB = JustDB("transaction-test-database")
+//		val transaction = Transaction(justDB)
+//
+//		val block = Block("transaction-test", 1)
+//		transaction.pin(block)
+//		transaction.setString(block, 0, "lfkdsk lfkdsk")
+//		transaction.commit()
+	}
 }

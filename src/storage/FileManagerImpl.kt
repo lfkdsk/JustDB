@@ -8,6 +8,9 @@ import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 
 /**
+ * FileManager - Simple Impl
+ * @param databaseName databaseName
+ * @param homeDir homeDir
  * Created by liufengkai on 2017/4/24.
  */
 class FileManagerImpl(databaseName: String, homeDir: String)

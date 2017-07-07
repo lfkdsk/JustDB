@@ -1,7 +1,7 @@
 package storage
 
 /**
- * Block in File
+ * Block in File - Block-Box-Model
  * @param fileName : Block's file Name
  * @param blockNumber: Block Number
  * Created by liufengkai on 2017/4/24.

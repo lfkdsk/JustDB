@@ -6,6 +6,7 @@ import metadata.MetadataManager
 import storage.FileManager
 
 /**
+ * Register Service Here!
  * Created by liufengkai on 2017/7/3.
  */
 
