@@ -7,8 +7,8 @@ import utils.parsertools.ast.Token
  */
 
 open class SqlToken(override val lineNumber: Int,
-                    override var tag: Int,
-                    override var text: String) : Token {
+               override var tag: Int,
+               override var text: String) : Token {
 
 	companion object default {
 
