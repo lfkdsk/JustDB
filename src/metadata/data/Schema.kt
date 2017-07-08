@@ -16,29 +16,49 @@ class Schema {
 	 */
 	data class Field(val type: Types, val length: Int)
 
+	companion object {
+		fun build(init: Builder.() -> Unit) = Builder(init).build()
+	}
+
 	/**
 	 * field - map
 	 */
 	private val fieldMap = HashMap<String, Field>()
 
-	/**
-	 * add field to schema
-	 * @param fieldName FieldName
-	 * @param type Types
-	 * @param length Value Length
-	 * @see core.JustDBService.Types support Type Value
-	 */
-	fun addField(fieldName: String, type: Types, length: Int) =
-			fieldMap.put(fieldName, Field(type, length))
+	class Builder(init: Builder.() -> Unit) {
+
+		val schema: Schema
+
+		init {
+			init()
+			schema = Schema()
+		}
+
+		/**
+		 * add field to schema
+		 * @param fieldName FieldName
+		 * @param type Types
+		 * @param length Value Length
+		 * @see core.JustDBService.Types support Type Value
+		 */
+		fun addField(fieldName: String, type: Types, length: Int) =
+				apply {
+					schema.fieldMap.put(fieldName, Field(type, length))
+				}
 
 
-	fun addStringField(fieldName: String, length: Int) =
-			addField(fieldName, Types.VARCHAR, length)
+		fun addStringField(fieldName: String, length: Int) =
+				apply {
+					addField(fieldName, Types.VARCHAR, length)
+				}
 
+		fun addIntegerField(fieldName: String) =
+				apply {
+					addField(fieldName, Types.INTEGER, 0)
+				}
 
-	fun addIntegerField(fieldName: String) =
-			addField(fieldName, Types.INTEGER, 0)
-
+		fun build(): Schema = schema
+	}
 
 	fun addAll(schema: Schema) =
 			fieldMap.putAll(schema.fieldMap)

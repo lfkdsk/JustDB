@@ -34,7 +34,7 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 	}
 
 	/**
-	 * Commit Record
+	 * Commit FileRecord
 	 * 1.commit flush all buffers
 	 * 2.add commit record
 	 * 3.flush
@@ -47,7 +47,7 @@ class RecoveryManager(val justDB: JustDB, val transactionID: Int) : Iterable<Abs
 	}
 
 	/**
-	 * RollBack Record
+	 * RollBack FileRecord
 	 * 1.roll bind transaction
 	 * 2.for-each => undo
 	 * 3.flush buffers & logger

@@ -2,6 +2,7 @@ package transaction
 
 import buffer.PageFormatter
 import core.BufferManager
+import core.FileManager
 import core.JustDB
 import storage.Block
 import transaction.concurrency.ConcurrencyManager
@@ -188,4 +189,19 @@ class Transaction(val justDB: JustDB) {
 
 		return block
 	}
+
+	/**
+	 * Returns the number of blocks in the specified file.
+	 * This method first obtains an SLock on the
+	 * "end of the file", before asking the file manager
+	 * to return the file size.
+	 * @param filename the name of the file
+	 * @return the number of blocks in the file
+	 */
+	fun size(filename: String): Int {
+		val dummyBlock = Block(filename, EOF)
+		concurrencyManager.readLock(dummyBlock)
+		return justDB.FileManager().blockNumber(filename)
+	}
+
 }

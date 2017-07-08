@@ -5,7 +5,7 @@ import storage.ExPage.DEFAULT.INT_SIZE
 import storage.ExPage.DEFAULT.strSize
 
 /**
- * Simple Line Logger Record
+ * Simple Line Logger FileRecord
  * Created by liufengkai on 2017/4/30.
  */
 class LogRecord(private val page: ExPage, private var pos: Int) {

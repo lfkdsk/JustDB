@@ -1,6 +1,7 @@
 package metadata
 
 import core.SystemService
+import metadata.data.Index
 import metadata.data.Schema
 import metadata.data.Table
 import transaction.Transaction
@@ -26,7 +27,7 @@ interface MetadataManager : SystemService {
 	                fieldName: String,
 	                transaction: Transaction)
 
-	// get method
+	// get info method
 
 	fun getTableInfo(tableName: String,
 	                 transaction: Transaction): Table
@@ -34,4 +35,10 @@ interface MetadataManager : SystemService {
 	fun getViewDef(viewName: String,
 	               transaction: Transaction): String
 
+	fun getIndexInfo(tableName: String,
+	                 transaction: Transaction): Map<String, Index>
+
+	fun getStatusInfo(tableName: String,
+	                  table: Table,
+	                  transaction: Transaction)
 }

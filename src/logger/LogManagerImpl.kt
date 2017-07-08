@@ -12,7 +12,7 @@ import utils.standard.If
 
 /**
  * Logger Manager
- * | LAST_POS | Record |
+ * | LAST_POS | FileRecord |
  * @see JustDB/art/logger-file-structure.png to get more message about logger-structure
  * Created by liufengkai on 2017/4/30.
  */
@@ -108,7 +108,7 @@ class LogManagerImpl(val justDB: JustDB, val logFile: String = justDB.logFileNam
 
 	/**
 	 * append structure message to LoggerFile
-	 * @see transaction.record Support some Record method to save Logger
+	 * @see transaction.record Support some FileRecord method to save Logger
 	 * { RecordType , otherMessage }
 	 * @see transaction.recovery.RecoveryManager Use RecoveryManager to control Logger
 	 */
