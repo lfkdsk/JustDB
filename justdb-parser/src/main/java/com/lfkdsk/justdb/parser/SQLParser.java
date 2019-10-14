@@ -15,13 +15,12 @@ package com.lfkdsk.justdb.parser;/*
  * limitations under the License.
  */
 
+import bnfgenast.ast.base.AstList;
 import bnfgenast.bnf.BnfCom;
 import bnfgenast.lexer.Lexer;
 import com.lfkdsk.justdb.parser.lexer.SQLLexer;
-import com.lfkdsk.justdb.parser.literal.IDLiteral;
-import com.lfkdsk.justdb.parser.literal.NumberLiteral;
-import com.lfkdsk.justdb.parser.literal.StringLiteral;
-import com.lfkdsk.justdb.parser.model.DataType;
+import com.lfkdsk.justdb.parser.literal.*;
+import com.lfkdsk.justdb.parser.model.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,4 +37,10 @@ public class SQLParser {
             rule().token("int"),
             rule().token("varchar").sep("(").ast(number).sep(")")
     );
+    public static final BnfCom<Constant> constant = rule(Constant::new).or(number, string);
+    public static final BnfCom<ConstantList> constantList = rule(ConstantList::new)
+            .ast(constant)
+            .repeat(rule().sep(",").ast(constant));
+    public static final BnfCom<IDLiteral> field = id;
+    public static final BnfCom<Expr> expr = rule(Expr::new).or(field, constant);
 }

@@ -20,12 +20,13 @@ import bnfgenast.ast.base.AstNode;
 
 import java.util.List;
 
-import static com.lfkdsk.justdb.parser.model.Constants.ENUM_TYPE;
+import static com.lfkdsk.justdb.parser.model.Constants.AstType.ENUM_TYPE;
+
 
 public class DataType extends AstList {
 
     public DataType(List<AstNode> children) {
-        super(children, ENUM_TYPE);
+        super(children, ENUM_TYPE.ordinal());
     }
 
 
