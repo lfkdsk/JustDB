@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven'
 }
 
 group 'com.lfkdsk'
@@ -7,10 +8,12 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+    }
 }
-
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
