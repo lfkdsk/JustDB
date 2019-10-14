@@ -1,0 +1,5 @@
+rootProject.name = 'justdb-wrapper'
+
+include 'justdb-parser'
+include 'justdb-core'
+
