@@ -15,16 +15,13 @@ package com.lfkdsk.justdb.parser.model;/*
  * limitations under the License.
  */
 
-public final class Constants {
-    public enum DataType {
-        INT, VARCHAR
-    }
+import bnfgenast.ast.base.AstList;
+import bnfgenast.ast.base.AstNode;
 
-    public enum AstType {
-        ENUM_TYPE,
-        CONSTANT,
-        CONSTANT_LIST,
-        EXPR,
-        TERM
+import java.util.List;
+
+public class FieldDefList extends AstList {
+    public FieldDefList(List<AstNode> children) {
+        super(children);
     }
 }

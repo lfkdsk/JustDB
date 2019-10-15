@@ -7,6 +7,7 @@ import bnfgenast.lexer.Lexer;
 import com.lfkdsk.justdb.parser.token.*;
 import com.lfkdsk.justdb.parser.utils.NumberUtils;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -38,6 +39,7 @@ public class SQLLexer implements Lexer {
     @Getter
     private boolean hasMore;
 
+    @Setter
     private LineNumberReader reader;
 
     @Getter
@@ -47,9 +49,7 @@ public class SQLLexer implements Lexer {
 
     private SQLLexer(SQLLexer lexer) {
         // add to queue
-        this.queue.clear();
         this.queue.addAll(lexer.queue);
-
         this.hasMore = lexer.hasMore;
         this.lineNumber = lexer.reader.getLineNumber();
     }
